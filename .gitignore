@@ -1,0 +1,21 @@
+# Environment
+.env
+
+# Backend
+upfront-api/target/
+upfront-api/.mvn/
+*.jar
+
+# Frontend
+upfront-front/node_modules/
+upfront-front/dist/
+upfront-front/.angular/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

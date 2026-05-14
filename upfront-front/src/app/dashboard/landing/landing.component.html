@@ -1,0 +1,16 @@
+<app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+
+<app-sidebar [isOpen]="sidebarOpen" (toggle)="toggleSidebar()"></app-sidebar>
+
+<div class="main-layout">
+    <!-- Feed column -->
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0;">
+        <app-create-post-card (open)="openCreatePost()"></app-create-post-card>
+        <app-post-feed></app-post-feed>
+    </div>
+
+    <!-- Right Sidebar -->
+    <app-right-sidebar></app-right-sidebar>
+</div>
+
+<app-create-post-modal [isOpen]="createModalOpen" (close)="closeCreatePost()"></app-create-post-modal>

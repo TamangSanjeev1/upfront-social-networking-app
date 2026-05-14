@@ -1,0 +1,15 @@
+<!-- Feed Filters -->
+<div style="display:flex;align-items:center;gap:8px;overflow-x:auto;padding-bottom:14px;scrollbar-width:none;">
+  <button class="filter-chip" [class.active]="activeFilter === 'hot'" (click)="setFilter('hot')">🔥 Hot</button>
+  <button class="filter-chip" [class.active]="activeFilter === 'new'" (click)="setFilter('new')">✨ New</button>
+  <button class="filter-chip" [class.active]="activeFilter === 'top'" (click)="setFilter('top')">📈 Top</button>
+  <button class="filter-chip" [class.active]="activeFilter === 'reviews'" (click)="setFilter('reviews')">⭐ Reviews</button>
+  <button class="filter-chip" [class.active]="activeFilter === 'salaries'" (click)="setFilter('salaries')">💰 Salaries</button>
+  <button class="filter-chip" [class.active]="activeFilter === 'interviews'" (click)="setFilter('interviews')">🎯 Interviews</button>
+  <button class="filter-chip" [class.active]="activeFilter === 'wfh'" (click)="setFilter('wfh')">🏠 WFH Culture</button>
+</div>
+
+<!-- Post Feed -->
+<div id="postFeed" style="display:flex;flex-direction:column;gap:14px;" [ngStyle]="{'opacity': fadeOut ? '0' : '1', 'transform': fadeOut ? 'translateY(4px)' : 'translateY(0)', 'transition': 'opacity 0.3s, transform 0.3s'}">
+  <app-post-card *ngFor="let p of filteredPosts" [post]="p"></app-post-card>
+</div>

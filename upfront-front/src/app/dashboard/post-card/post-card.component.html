@@ -1,0 +1,65 @@
+<div class="post-card">
+  <!-- Post header -->
+  <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;">
+    <div class="avatar" [style.background]="avatarBg" style="width:40px;height:40px;font-size:13px;flex-shrink:0;">{{post.initials}}</div>
+    <div style="flex:1;min-width:0;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+        <span style="font-weight:600;font-size:14px;">{{post.author}}</span>
+        <svg *ngIf="post.isVerified" width="15" height="15" viewBox="0 0 15 15" fill="none" class="verified"><circle cx="7.5" cy="7.5" r="6" fill="#4460ed"/><path d="M5 7.5L7 9.5L10 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:12px;color:#94a3b8;">{{post.role}}</span>
+        <a *ngIf="post.company" class="company-badge" href="#">
+          <span style="width:14px;height:14px;border-radius:3px;[style.background]='post.companyColor';display:inline-block;flex-shrink:0;"></span>
+          {{post.company}}
+        </a>
+        <span style="margin-left:auto;font-size:12px;color:#94a3b8;white-space:nowrap;">{{post.timeAgo}}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;" [style.background]="typeInfo.bg" [style.color]="typeInfo.color">{{typeInfo.label}}</span>
+        <span *ngIf="post.rating" class="stars" style="font-size:12px;">{{stars}}</span>
+        <span *ngIf="post.rating" style="font-size:12px;font-weight:600;" [style.color]="sentimentColor">{{post.rating}}</span>
+        <span *ngIf="post.salary" class="salary-chip">{{post.salary}}</span>
+        <span *ngIf="post.sentiment" style="font-size:11px;padding:2px 6px;border-radius:4px;text-transform:capitalize;" 
+              [style.border-left]="'3px solid ' + sentimentColor" 
+              [style.background]="sentimentColor + '15'" 
+              [style.color]="sentimentColor">{{post.sentiment}}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <h3 style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:8px;letter-spacing:-0.3px;">{{post.title}}</h3>
+
+  <!-- Body -->
+  <p style="font-size:14px;color:#64748b;line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">{{post.body}}</p>
+
+  <!-- Tags -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+    <span *ngFor="let t of post.tags" class="tag">{{t}}</span>
+  </div>
+
+  <!-- Action bar -->
+  <div style="display:flex;align-items:center;gap:4px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.05);">
+    <button class="vote-btn" [class.upvoted]="post.isUpvoted" (click)="toggleVote(true)">
+      <svg width="15" height="15" viewBox="0 0 15 15" [attr.fill]="post.isUpvoted ? 'currentColor' : 'none'"><path d="M7.5 2L13 8H10V13H5V8H2L7.5 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <span>{{formatNum(post.upvotes)}}</span>
+    </button>
+    <button class="vote-btn" (click)="toggleVote(false)">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 13L2 7H5V2H10V7H13L7.5 13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="action-btn">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 2H13C13.6 2 14 2.4 14 3V10C14 10.6 13.6 11 13 11H5L2 14V3C2 2.4 2.4 2 2 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      {{formatNum(post.comments)}}
+    </button>
+    <button class="action-btn">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L6 4V6C10 6 13 8 13 12C11 10 9 9 6 9V11L2 7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      Share
+    </button>
+    <button class="action-btn">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 4H13M2 7.5H10M2 11H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Save
+    </button>
+    <button class="action-btn" style="margin-left:auto;">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="3.5" cy="7.5" r="1.2" fill="currentColor"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/><circle cx="11.5" cy="7.5" r="1.2" fill="currentColor"/></svg>
+    </button>
+  </div>
+</div>

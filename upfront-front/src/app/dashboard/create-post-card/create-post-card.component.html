@@ -1,0 +1,26 @@
+<div class="card create-post-card" style="padding:20px; margin-bottom:16px;">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+    <div class="avatar" style="background:linear-gradient(135deg,#4460ed,#a78bfa);">AJ</div>
+    <div class="create-post-area" style="flex:1;" (click)="onOpen()">
+      Share your experience, review, or question…
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <button class="action-btn" style="background:#f8f9fc;border-radius:10px;padding:8px 14px;" (click)="onOpen()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 8H11M5 5H11M5 11H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Post
+    </button>
+    <button class="action-btn" style="background:#f8f9fc;border-radius:10px;padding:8px 14px;" (click)="onOpen()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L9.6 6H14L10.7 8.6L11.9 13L8 10.4L4.1 13L5.3 8.6L2 6H6.4L8 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      Review
+    </button>
+    <button class="action-btn" style="background:#f8f9fc;border-radius:10px;padding:8px 14px;" (click)="onOpen()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C5.2 2 3 4.2 3 7C3 9 4.2 10.7 6 11.5L6 14L8 13L10 14L10 11.5C11.8 10.7 13 9 13 7C13 4.2 10.8 2 8 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      Question
+    </button>
+    <button class="action-btn" style="background:#f8f9fc;border-radius:10px;padding:8px 14px;" (click)="onOpen()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4H14M2 8H10M2 12H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Poll
+    </button>
+  </div>
+</div>

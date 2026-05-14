@@ -1,0 +1,24 @@
+<div id="createModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;" *ngIf="isOpen">
+  <div class="card" style="width:min(600px,calc(100vw - 32px));max-height:80vh;overflow-y:auto;border-radius:20px;padding:28px;animation:fadeUp 0.3s ease both;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <span style="font-size:18px;font-weight:700;">Create Post</span>
+      <button (click)="close.emit()" style="width:32px;height:32px;border-radius:8px;border:none;background:#f1f3f9;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+      <button class="pill-tab" [class.active]="postType === 'post'" (click)="setPostType('post')">💬 Post</button>
+      <button class="pill-tab" [class.active]="postType === 'review'" (click)="setPostType('review')">⭐ Review</button>
+      <button class="pill-tab" [class.active]="postType === 'salary'" (click)="setPostType('salary')">💰 Salary</button>
+      <button class="pill-tab" [class.active]="postType === 'interview'" (click)="setPostType('interview')">🎯 Interview</button>
+    </div>
+    <input type="text" placeholder="Title" style="width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:15px;font-weight:600;outline:none;margin-bottom:12px;background:transparent;color:inherit;">
+    <input type="text" placeholder="Company (optional)" style="width:100%;padding:10px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;margin-bottom:12px;background:transparent;color:inherit;">
+    <textarea placeholder="Share your thoughts, experience, or review…" rows="5" style="width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;resize:none;background:transparent;color:inherit;line-height:1.6;"></textarea>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;gap:8px;">
+        <button class="tag" style="padding:8px 12px;">🏷️ Add Tag</button>
+        <button class="tag" style="padding:8px 12px;">🔒 Anonymous</button>
+      </div>
+      <button (click)="close.emit()" style="padding:10px 24px;border-radius:12px;border:none;background:var(--brand);color:white;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">Post →</button>
+    </div>
+  </div>
+</div>
