@@ -14,7 +14,7 @@
         <path d="M9 6L12 9L9 12L6 9L9 6Z" fill="white"/>
       </svg>
     </div>
-    <span class="logo-text">WorkTalk</span>
+    <span class="logo-text">UpFront</span>
   </div>
 
   <!-- Search -->
@@ -30,9 +30,9 @@
   <!-- Right actions -->
   <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
     <!-- WS Status -->
-    <div class="ws-indicator" [ngStyle]="{'background': wsConnected ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', 'color': wsConnected ? '#10b981' : '#ef4444'}" data-tooltip="WebSocket connected">
-      <div class="ws-dot" [ngStyle]="{'background': wsConnected ? '#10b981' : '#ef4444'}"></div>
-      <span>{{ wsConnected ? 'Live' : 'Offline' }}</span>
+    <div class="ws-indicator" [ngStyle]="{'background': wsStatus() === 'CONNECTED' ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', 'color': wsStatus() === 'CONNECTED' ? '#10b981' : '#ef4444'}" data-tooltip="WebSocket connected">
+      <div class="ws-dot" [ngStyle]="{'background': wsStatus() === 'CONNECTED' ? '#10b981' : '#ef4444'}"></div>
+      <span>{{ wsStatus() === 'CONNECTED' ? 'Live' : 'Offline' }}</span>
     </div>
 
     <!-- Theme toggle -->
@@ -76,8 +76,8 @@
 
     <!-- Profile -->
     <button class="profile-btn">
-      <span style="font-size:13px;font-weight:600;color:#64748b;">Hey, Alex</span>
-      <div class="avatar" style="background:linear-gradient(135deg,#4460ed,#a78bfa);width:32px;height:32px;font-size:12px;">AJ</div>
+      <span style="font-size:13px;font-weight:600;color:#64748b;">Hey, {{firstName}}</span>
+      <div class="avatar" style="background:linear-gradient(135deg,#4460ed,#a78bfa);width:32px;height:32px;font-size:12px;">{{initials}}</div>
     </button>
   </div>
 </nav>

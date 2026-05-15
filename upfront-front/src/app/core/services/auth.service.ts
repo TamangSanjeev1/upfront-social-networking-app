@@ -2,31 +2,26 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-
-export interface UserProfile {
-  id: number;
-  name: string;
-  email: string;
-  profileImage: string;
-  createdAt: string;
-  lastLogin: string;
-}
-
-const TOKEN_KEY = 'jwt_token';
+import {TokenService} from "./token.service";
+import {UserProfile} from "../models/common-model";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
   currentUser = signal<UserProfile | null>(null);
 
-  constructor(private http: HttpClient, private router: Router) {
-    // Restore user from token on init
-    if (this.isAuthenticated()) {
-      this.fetchCurrentUser().subscribe({
-        next: user => this.currentUser.set(user),
-        error: () => this.logout()
-      });
+  constructor(private http: HttpClient, private router: Router, private tokenService: TokenService) {
+  }
+
+  initializeAuth(): void {
+    if (!this.isAuthenticated() || this.currentUser()) {
+      return;
     }
+
+    this.fetchCurrentUser().subscribe({
+      next: user => this.currentUser.set(user),
+      error: () => console.log()
+    });
   }
 
   loginWithGoogle(): void {
@@ -34,7 +29,7 @@ export class AuthService {
   }
 
   handleCallback(token: string): void {
-    this.saveToken(token);
+    this.tokenService.setToken(token);
     this.fetchCurrentUser().subscribe({
       next: user => {
         this.currentUser.set(user);
@@ -49,7 +44,7 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    const token = this.getToken();
+    const token = this.tokenService.getToken();
     if (!token) return false;
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
@@ -59,16 +54,8 @@ export class AuthService {
     }
   }
 
-  saveToken(token: string): void {
-    localStorage.setItem(TOKEN_KEY, token);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem(TOKEN_KEY);
-  }
-
   logout(): void {
-    localStorage.removeItem(TOKEN_KEY);
+    this.tokenService.clear();
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }

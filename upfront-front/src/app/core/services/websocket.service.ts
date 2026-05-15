@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import { Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
+import {TokenService} from "./token.service";
 
 export interface Notification {
   id: string;
@@ -23,10 +24,10 @@ export class WebSocketService implements OnDestroy {
   private client: Client | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private tokenService: TokenService) {}
 
   connect(): void {
-    const token = this.authService.getToken();
+    const token = this.tokenService.getToken();
     if (!token || this.client?.active) return;
 
     this.status.set('CONNECTING');
