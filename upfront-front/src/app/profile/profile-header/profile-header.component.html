@@ -1,0 +1,102 @@
+<section class="profile-header">
+  <!-- Cover Banner -->
+  <div class="cover-banner" [style.background]="coverGradient">
+    <div class="cover-overlay"></div>
+    <div class="cover-noise"></div>
+    <!-- Geometric accent shapes -->
+    <div class="cover-accent cover-accent--1"></div>
+    <div class="cover-accent cover-accent--2"></div>
+    <div class="cover-accent cover-accent--3"></div>
+  </div>
+
+  <!-- Header Content -->
+  <div class="header-content">
+    <div class="avatar-row">
+      <!-- Avatar -->
+      <div class="avatar-wrapper">
+        <div class="avatar-skeleton" [class.hidden]="avatarLoaded()"></div>
+        <img
+          class="avatar"
+          [class.loaded]="avatarLoaded()"
+          [src]="ps.profile().avatarUrl"
+          [alt]="ps.profile().displayName"
+          (load)="avatarLoaded.set(true)"
+        />
+        <span *ngIf="ps.profile().isVerified" class="verified-badge" matTooltip="Verified">
+          <mat-icon>verified</mat-icon>
+        </span>
+        <div class="avatar-ring"></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button
+          mat-flat-button
+          class="btn-follow"
+          [class.following]="ps.profile().isFollowing"
+          (click)="ps.toggleFollow()"
+        >
+          <mat-icon>{{ ps.profile().isFollowing ? 'person_check' : 'person_add' }}</mat-icon>
+          {{ ps.profile().isFollowing ? 'Following' : 'Follow' }}
+        </button>
+        <button mat-stroked-button class="btn-message">
+          <mat-icon>mail_outline</mat-icon>
+          Message
+        </button>
+        <button mat-icon-button class="btn-edit" (click)="openEditDialog()" matTooltip="Edit Profile">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button class="btn-more" matTooltip="More options">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Identity -->
+    <div class="identity">
+      <div class="name-row">
+        <h1 class="display-name">{{ ps.profile().displayName }}</h1>
+        <span class="reputation-badge" matTooltip="Reputation score">
+          <mat-icon class="rep-icon">workspace_premium</mat-icon>
+          {{ ps.reputationFormatted() }}
+        </span>
+      </div>
+      <p class="username">&#64;{{ ps.profile().username }}</p>
+      <p class="title">{{ ps.profile().title }}</p>
+
+      <!-- Meta info -->
+      <div class="meta-row">
+        <span class="meta-item">
+          <mat-icon>location_on</mat-icon>
+          {{ ps.profile().location }}
+        </span>
+        <span class="meta-item">
+          <mat-icon>business</mat-icon>
+          {{ ps.profile().company }}
+        </span>
+        <span class="meta-item">
+          <mat-icon>calendar_today</mat-icon>
+          Joined {{ ps.profile().joinedDate }}
+        </span>
+      </div>
+
+      <!-- Followers/Following -->
+      <div class="social-counts">
+        <button class="count-item">
+          <span class="count-value">{{ formatNumber(ps.profile().followers) }}</span>
+          <span class="count-label">Followers</span>
+        </button>
+        <span class="count-divider">·</span>
+        <button class="count-item">
+          <span class="count-value">{{ formatNumber(ps.profile().following) }}</span>
+          <span class="count-label">Following</span>
+        </button>
+        <span class="count-divider">·</span>
+        <div class="count-item">
+          <span class="count-value">{{ formatNumber(ps.profile().stats.upvotes) }}</span>
+          <span class="count-label">Upvotes received</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

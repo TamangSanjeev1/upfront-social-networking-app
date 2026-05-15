@@ -17,7 +17,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'profile',
+    path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'profile-1',
     loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [authGuard]
   },

@@ -1,0 +1,93 @@
+<div class="app-root" [class.dark]="ps.isDarkMode()">
+    <!-- Top Nav Bar -->
+    <header class="top-nav">
+        <div class="nav-inner">
+            <div class="nav-brand">
+                <div class="brand-logo">
+                    <span class="logo-icon">◆</span>
+                </div>
+                <span class="brand-name">DevProfile</span>
+            </div>
+
+            <nav class="nav-links">
+                <a class="nav-link active">Profile</a>
+                <a class="nav-link">Explore</a>
+                <a class="nav-link">Communities</a>
+            </nav>
+
+            <div class="nav-actions">
+                <!-- Dark Mode Toggle -->
+                <button
+                        class="theme-toggle"
+                        (click)="ps.toggleDarkMode()"
+                        [matTooltip]="ps.isDarkMode() ? 'Light mode' : 'Dark mode'"
+                >
+                    <mat-icon>{{ ps.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+                </button>
+
+                <!-- Avatar -->
+                <div class="nav-avatar">
+                    <img [src]="ps.profile().avatarUrl" alt="Me" />
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Body -->
+    <main class="page-body">
+        <!-- Skeleton Loader -->
+        @if (ps.isLoading()) {
+            <div class="skeleton-page">
+                <div class="skeleton-header">
+                    <div class="skeleton-cover skeleton-shimmer"></div>
+                    <div class="skeleton-row">
+                        <div class="skeleton-avatar skeleton-shimmer"></div>
+                        <div class="skeleton-actions">
+                            <div class="skeleton-btn skeleton-shimmer"></div>
+                            <div class="skeleton-btn skeleton-shimmer"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-name skeleton-shimmer"></div>
+                    <div class="skeleton-title skeleton-shimmer"></div>
+                    <div class="skeleton-meta skeleton-shimmer"></div>
+                </div>
+
+                <div class="skeleton-body">
+                    <div class="skeleton-sidebar">
+                        <div class="skeleton-card skeleton-shimmer"></div>
+                        <div class="skeleton-card skeleton-shimmer"></div>
+                    </div>
+                    <div class="skeleton-main">
+                        <div class="skeleton-card skeleton-shimmer" style="height: 200px;"></div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Real Content -->
+        @if (!ps.isLoading()) {
+            <div class="profile-page">
+                <!-- Profile Header (full width) -->
+                <div class="section-full">
+                    <app-profile-header />
+                </div>
+
+                <!-- Two-column layout -->
+                <div class="profile-columns">
+                    <!-- Left Sidebar -->
+                    <aside class="profile-sidebar">
+                        <app-profile-bio />
+                        <app-profile-links />
+                        <app-profile-stats />
+                        <app-profile-skills />
+                    </aside>
+
+                    <!-- Main Feed -->
+                    <section class="profile-main">
+                        <app-profile-activity-tabs />
+                    </section>
+                </div>
+            </div>
+        }
+    </main>
+</div>

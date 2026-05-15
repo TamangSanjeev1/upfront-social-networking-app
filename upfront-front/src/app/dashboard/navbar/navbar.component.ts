@@ -15,6 +15,7 @@ export class NavbarComponent extends BaseComponent {
   
   isDark = false;
   notifOpen = false;
+  profileOpen = false;
   notifications = [...NOTIFICATIONS];
   wsStatus = computed(() => this.ws.status());
 
@@ -42,6 +43,12 @@ export class NavbarComponent extends BaseComponent {
 
   toggleNotifications() {
     this.notifOpen = !this.notifOpen;
+    if (this.notifOpen) this.profileOpen = false;
+  }
+
+  toggleProfile() {
+    this.profileOpen = !this.profileOpen;
+    if (this.profileOpen) this.notifOpen = false;
   }
 
   readNotif(n: any) {
