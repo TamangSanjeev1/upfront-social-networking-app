@@ -20,7 +20,7 @@ export class AuthService {
 
     this.fetchCurrentUser().subscribe({
       next: user => this.currentUser.set(user),
-      error: () => console.log()
+      error: () => this.logout()
     });
   }
 
