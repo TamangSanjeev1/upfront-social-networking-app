@@ -175,6 +175,14 @@ body {
   font-family: var(--font-body) !important;
 }
 
+.snack-fail {
+  background: #1a1f2e !important;
+  color: #e6edf3 !important;
+  border-left: 3px solid #b91010 !important;
+  border-radius: 12px !important;
+  font-family: var(--font-body) !important;
+}
+
 .mat-mdc-tooltip {
   font-size: 12px !important;
   font-family: var(--font-body) !important;

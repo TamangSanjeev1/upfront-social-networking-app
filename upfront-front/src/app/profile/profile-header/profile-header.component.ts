@@ -1,28 +1,26 @@
-import {
-  Component, inject, signal, OnInit, ChangeDetectionStrategy,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialog } from '@angular/material/dialog';
-import { MatChipsModule } from '@angular/material/chips';
+import {ChangeDetectionStrategy, Component, inject, OnInit, signal,} from '@angular/core';
+import {formatDate} from '@angular/common';
+import {MatDialog} from '@angular/material/dialog';
 import {ProfileService} from "../../shared/services/profile.service";
-import { EditProfileDialogComponent } from '../edit-profile-dialog/edit-profile-dialog.component';
+import {EditProfileDialogComponent} from '../edit-profile-dialog/edit-profile-dialog.component';
+import {BaseComponent} from "../../core/components/base.component";
+import {AuthService} from "../../core/services/auth.service";
+import {Utils} from "../../shared/utils/utils";
 
 @Component({
   selector: 'app-profile-header',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule, MatChipsModule],
   templateUrl: './profile-header.component.html',
   styleUrls: ['./profile-header.component.scss'],
 })
-export class ProfileHeaderComponent implements OnInit {
+export class ProfileHeaderComponent extends BaseComponent implements OnInit {
   protected ps = inject(ProfileService);
   private dialog = inject(MatDialog);
 
-  protected avatarLoaded = signal(false);
+  constructor(authService: AuthService) {
+    super(authService);
+  }
+
   protected coverLoaded = signal(false);
 
   ngOnInit(): void {
@@ -35,7 +33,7 @@ export class ProfileHeaderComponent implements OnInit {
       width: '640px',
       maxWidth: '96vw',
       panelClass: 'edit-profile-panel',
-      data: { profile: this.ps.profile() },
+      data: { profile: this.user() },
     });
   }
 
@@ -53,4 +51,7 @@ export class ProfileHeaderComponent implements OnInit {
     if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
     return n.toString();
   }
+
+  protected readonly formatDate = formatDate;
+  protected readonly Utils = Utils;
 }

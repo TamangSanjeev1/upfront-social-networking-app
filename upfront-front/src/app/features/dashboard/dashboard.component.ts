@@ -6,6 +6,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../core/services/auth.service';
 import { WebSocketService } from '../../core/services/websocket.service';
 import { NotificationPanelComponent } from '../../shared/components/notification-panel/notification-panel.component';
+import {Utils} from "../../shared/utils/utils";
 
 @Component({
   selector: 'app-dashboard',
@@ -59,11 +60,11 @@ import { NotificationPanelComponent } from '../../shared/components/notification
                 <div class="mt-5 pt-4 border-t border-slate-50 space-y-2 text-left">
                   <div class="flex justify-between text-sm">
                     <span class="text-slate-400">Member since</span>
-                    <span class="text-slate-600 font-medium">{{ formatDate(user()!.createdAt) }}</span>
+                    <span class="text-slate-600 font-medium">{{ Utils.formatDate(user()!.createdAt) }}</span>
                   </div>
                   <div class="flex justify-between text-sm">
                     <span class="text-slate-400">Last login</span>
-                    <span class="text-slate-600 font-medium">{{ formatDate(user()!.lastLogin) }}</span>
+                    <span class="text-slate-600 font-medium">{{ Utils.formatDate(user()!.lastLogin) }}</span>
                   </div>
                 </div>
               </div>
@@ -127,7 +128,5 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return 'text-slate-400';
   }
 
-  formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' });
-  }
+  protected readonly Utils = Utils;
 }

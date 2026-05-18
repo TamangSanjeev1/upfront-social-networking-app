@@ -14,13 +14,12 @@
     <div class="avatar-row">
       <!-- Avatar -->
       <div class="avatar-wrapper">
-        <div class="avatar-skeleton" [class.hidden]="avatarLoaded()"></div>
+        <div class="avatar-skeleton" [class.hidden]="user()"></div>
         <img
           class="avatar"
-          [class.loaded]="avatarLoaded()"
-          [src]="ps.profile().avatarUrl"
-          [alt]="ps.profile().displayName"
-          (load)="avatarLoaded.set(true)"
+          [class.loaded]="user()"
+          [src]="user()!.profileImage || 'https://ui-avatars.com/api/?name=' + user()!.name + '&size=120'"
+          [alt]="user()!.name"
         />
         <span *ngIf="ps.profile().isVerified" class="verified-badge" matTooltip="Verified">
           <mat-icon>verified</mat-icon>
@@ -55,28 +54,28 @@
     <!-- Identity -->
     <div class="identity">
       <div class="name-row">
-        <h1 class="display-name">{{ ps.profile().displayName }}</h1>
+        <h1 class="display-name">{{ fullName }}</h1>
         <span class="reputation-badge" matTooltip="Reputation score">
           <mat-icon class="rep-icon">workspace_premium</mat-icon>
           {{ ps.reputationFormatted() }}
         </span>
       </div>
-      <p class="username">&#64;{{ ps.profile().username }}</p>
-      <p class="title">{{ ps.profile().title }}</p>
+      <p class="username">{{ user()!.email }}</p>
+      <p class="title">{{ user()!.title }}</p>
 
       <!-- Meta info -->
       <div class="meta-row">
         <span class="meta-item">
           <mat-icon>location_on</mat-icon>
-          {{ ps.profile().location }}
+          {{ user()!.location }}
         </span>
         <span class="meta-item">
           <mat-icon>business</mat-icon>
-          {{ ps.profile().company }}
+          {{ user()!.company }}
         </span>
         <span class="meta-item">
           <mat-icon>calendar_today</mat-icon>
-          Joined {{ ps.profile().joinedDate }}
+          Joined {{ Utils.formatDate(user()!.createdAt) }}
         </span>
       </div>
 

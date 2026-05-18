@@ -29,7 +29,7 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Display Name</mat-label>
-              <input matInput formControlName="displayName" placeholder="Your full name" />
+              <input matInput formControlName="name" placeholder="Your full name" />
               <mat-icon matPrefix>badge</mat-icon>
               <mat-error *ngIf="hasError('displayName', 'required')">Name is required</mat-error>
               <mat-error *ngIf="hasError('displayName', 'minlength')">At least 2 characters</mat-error>
@@ -37,7 +37,7 @@
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Username</mat-label>
-              <input matInput formControlName="username" placeholder="e.g. alex.chen" />
+              <input matInput formControlName="email" placeholder="e.g. alex.chen" />
               <mat-icon matPrefix>alternate_email</mat-icon>
               <mat-hint>Only letters, numbers, dots, underscores</mat-hint>
               <mat-error *ngIf="hasError('username', 'required')">Username is required</mat-error>

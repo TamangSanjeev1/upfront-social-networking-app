@@ -1,11 +1,14 @@
 import {Component, computed, EventEmitter, Output} from '@angular/core';
-import {NOTIFICATIONS} from '../../core/mock-data';
-import {AuthService} from "../../core/services/auth.service";
-import {WebSocketService} from "../../core/services/websocket.service";
-import {BaseComponent} from "../../core/components/base.component";
+import {NOTIFICATIONS} from '../../../core/mock-data';
+import {AuthService} from "../../../core/services/auth.service";
+import {WebSocketService} from "../../../core/services/websocket.service";
+import {BaseComponent} from "../../../core/components/base.component";
+import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'app-navbar',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

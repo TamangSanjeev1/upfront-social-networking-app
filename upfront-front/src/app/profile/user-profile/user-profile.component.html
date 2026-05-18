@@ -1,37 +1,6 @@
 <div class="app-root" [class.dark]="ps.isDarkMode()">
     <!-- Top Nav Bar -->
-    <header class="top-nav">
-        <div class="nav-inner">
-            <div class="nav-brand">
-                <div class="brand-logo">
-                    <span class="logo-icon">◆</span>
-                </div>
-                <span class="brand-name">DevProfile</span>
-            </div>
-
-            <nav class="nav-links">
-                <a class="nav-link active">Profile</a>
-                <a class="nav-link">Explore</a>
-                <a class="nav-link">Communities</a>
-            </nav>
-
-            <div class="nav-actions">
-                <!-- Dark Mode Toggle -->
-                <button
-                        class="theme-toggle"
-                        (click)="ps.toggleDarkMode()"
-                        [matTooltip]="ps.isDarkMode() ? 'Light mode' : 'Dark mode'"
-                >
-                    <mat-icon>{{ ps.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
-                </button>
-
-                <!-- Avatar -->
-                <div class="nav-avatar">
-                    <img [src]="ps.profile().avatarUrl" alt="Me" />
-                </div>
-            </div>
-        </div>
-    </header>
+    <app-navbar (toggleSidebar)="toggleSidebar()" class="nav-inner"></app-navbar>
 
     <!-- Page Body -->
     <main class="page-body">

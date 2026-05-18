@@ -109,21 +109,21 @@ import {Skill} from "../../shared/models/user-profile.model";
 
       &:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-      &--expert {
+      --expert {
         background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.12));
         color: #6366f1;
         border-color: rgba(99,102,241,0.3);
         .dark & { color: #a5b4fc; border-color: rgba(99,102,241,0.4); }
       }
 
-      &--intermediate {
+      --intermediate {
         background: rgba(6,182,212,0.1);
         color: #0891b2;
         border-color: rgba(6,182,212,0.25);
         .dark & { color: #67e8f9; border-color: rgba(6,182,212,0.35); }
       }
 
-      &--beginner {
+      --beginner {
         background: rgba(16,185,129,0.1);
         color: #059669;
         border-color: rgba(16,185,129,0.25);
@@ -174,9 +174,9 @@ import {Skill} from "../../shared/models/user-profile.model";
       padding: 2px 8px;
       border-radius: 100px;
 
-      &--expert { color: #6366f1; background: rgba(99,102,241,0.1); }
-      &--intermediate { color: #0891b2; background: rgba(6,182,212,0.1); }
-      &--beginner { color: #059669; background: rgba(16,185,129,0.1); }
+      --expert { color: #6366f1; background: rgba(99,102,241,0.1); }
+      --intermediate { color: #0891b2; background: rgba(6,182,212,0.1); }
+      --beginner { color: #059669; background: rgba(16,185,129,0.1); }
     }
   `],
 })
