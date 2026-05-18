@@ -27,11 +27,13 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(paddedKey);
     }
 
-    public String generateToken(String email, String name, String profileImage) {
+    public String generateToken(String email, String name, String profileImage, String googleId, Long id) {
         return Jwts.builder()
                 .subject(email)
                 .claim("name", name)
                 .claim("profileImage", profileImage)
+                .claim("googleId", googleId)
+                .claim("id", id)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key())
@@ -40,6 +42,20 @@ public class JwtUtils {
 
     public String getEmailFromToken(String token) {
         return parseClaims(token).getSubject();
+    }
+
+    public Long getId(String token) {
+
+        Claims claims = parseClaims(token);
+
+        return claims.get("id", Long.class);
+    }
+
+    public String getGoogleId(String token) {
+
+        Claims claims = parseClaims(token);
+
+        return claims.get("googleId", String.class);
     }
 
     public boolean validateToken(String token) {

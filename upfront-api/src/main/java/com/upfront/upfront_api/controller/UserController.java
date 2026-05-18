@@ -2,6 +2,7 @@ package com.upfront.upfront_api.controller;
 
 import com.upfront.upfront_api.dto.UserDto;
 import com.upfront.upfront_api.entity.User;
+import com.upfront.upfront_api.security.jwt.UserPrincipal;
 import com.upfront.upfront_api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<Map<String, Object>> getCurrentUser(Authentication authentication) {
-        String email = (String) authentication.getPrincipal();
-        User user = userService.findByEmail(email);
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        User user = userService.findByEmail(principal.getEmail());
         Map<String, Object> response = new HashMap<>();
         response.put("id", user.getId());
         response.put("name", user.getName());
