@@ -1,9 +1,8 @@
 // profile-links.component.ts
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {ProfileService} from "../../shared/services/profile.service";
+import {BaseComponent} from "../../core/components/base.component";
+import {AuthService} from "../../core/services/auth.service";
 
 interface LinkConfig {
   key: keyof import('../../shared/models/user-profile.model').SocialLinks;
@@ -15,9 +14,7 @@ interface LinkConfig {
 
 @Component({
   selector: 'app-profile-links',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatIconModule, MatTooltipModule],
   template: `
     <div class="links-card">
       <div class="card-header">
@@ -30,7 +27,7 @@ interface LinkConfig {
         @for (link of visibleLinks(); track link.key) {
           <li class="link-item">
             <a
-              [href]="ps.profile().socialLinks[link.key]"
+              [href]="user()!.socialLinks[link.key]"
               target="_blank"
               rel="noopener noreferrer"
               class="link-anchor"
@@ -42,7 +39,7 @@ interface LinkConfig {
               </span>
               <span class="link-info">
                 <span class="link-label">{{ link.label }}</span>
-                <span class="link-url">{{ formatUrl(ps.profile().socialLinks[link.key]!) }}</span>
+                <span class="link-url">{{ formatUrl(user()!.socialLinks[link.key]!) }}</span>
               </span>
               <mat-icon class="link-ext">open_in_new</mat-icon>
             </a>
@@ -150,8 +147,12 @@ interface LinkConfig {
     }
   `],
 })
-export class ProfileLinksComponent {
+export class ProfileLinksComponent extends BaseComponent{
   protected ps = inject(ProfileService);
+
+  constructor(authService: AuthService) {
+    super(authService);
+  }
 
   readonly linkConfigs: LinkConfig[] = [
     { key: 'github', label: 'GitHub', icon: 'github', color: '#fff', bgColor: '#24292e' },
@@ -162,7 +163,7 @@ export class ProfileLinksComponent {
   ];
 
   visibleLinks() {
-    const links = this.ps.profile().socialLinks;
+    const links = this.user()!.socialLinks;
     return this.linkConfigs.filter(c => links[c.key]);
   }
 

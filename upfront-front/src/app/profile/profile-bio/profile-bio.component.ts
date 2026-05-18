@@ -1,15 +1,11 @@
 // profile-bio.component.ts
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import {ProfileService} from "../../shared/services/profile.service";
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {BaseComponent} from "../../core/components/base.component";
+import {AuthService} from "../../core/services/auth.service";
 
 @Component({
   selector: 'app-profile-bio',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatButtonModule, MatIconModule],
   template: `
     <div class="bio-card">
       <div class="card-header">
@@ -20,7 +16,7 @@ import {ProfileService} from "../../shared/services/profile.service";
       </div>
       <div class="bio-body">
         <p class="bio-text" [class.collapsed]="!expanded()">
-          {{ ps.profile().bio }}
+          {{ user()!.bio }}
         </p>
         @if (isTruncatable()) {
           <button class="expand-btn" (click)="toggleExpanded()">
@@ -90,12 +86,15 @@ import {ProfileService} from "../../shared/services/profile.service";
     }
   `],
 })
-export class ProfileBioComponent {
-  protected ps = inject(ProfileService);
+export class ProfileBioComponent extends BaseComponent {
   protected expanded = signal(false);
 
+  constructor(authService: AuthService) {
+    super(authService);
+  }
+
   isTruncatable(): boolean {
-    return this.ps.profile().bio.length > 200;
+    return this.user()!.bio.length > 200;
   }
 
   toggleExpanded() {

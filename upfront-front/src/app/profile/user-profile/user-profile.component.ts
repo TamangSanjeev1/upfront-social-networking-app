@@ -7,18 +7,18 @@ import {ProfileSkillsComponent} from "../profile-skills/profile-skills.component
 import {ProfileActivityTabsComponent} from "../profile-activity-tabs/profile-activity-tabs.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {ProfileModule} from "../profile.module";
+import {DashboardModule} from "../../dashboard/dashboard.module";
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
   imports: [
-    ProfileBioComponent,
-    ProfileLinksComponent,
     ProfileStatsComponent,
     ProfileSkillsComponent,
     ProfileActivityTabsComponent,
     NavbarComponent,
-    ProfileModule
+    ProfileModule,
+    DashboardModule
   ],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss']

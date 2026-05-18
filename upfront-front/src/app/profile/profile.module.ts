@@ -7,14 +7,20 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatChipsModule} from "@angular/material/chips";
+import {ProfileLinksComponent} from "./profile-links/profile-links.component";
+import {ProfileBioComponent} from "./profile-bio/profile-bio.component";
 
 
 @NgModule({
   declarations: [
-    ProfileHeaderComponent
+    ProfileHeaderComponent,
+    ProfileLinksComponent,
+    ProfileBioComponent
   ],
   exports: [
-    ProfileHeaderComponent
+    ProfileHeaderComponent,
+    ProfileLinksComponent,
+    ProfileBioComponent
   ],
   imports: [
     CommonModule,
