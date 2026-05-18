@@ -1,6 +1,9 @@
 package com.upfront.upfront_api.service;
 
+import com.upfront.upfront_api.dto.UserDto;
 import com.upfront.upfront_api.entity.User;
+import com.upfront.upfront_api.entity.UserSkill;
+import com.upfront.upfront_api.exception.ResourceNotFoundException;
 import com.upfront.upfront_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,5 +49,38 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found: " + email));
+    }
+
+    public User updateUserDetails(String email, UserDto user) {
+        return userRepository.findByEmail(email)
+                .map(existingUser -> {
+                    log.info("User found: {}", existingUser.getEmail());
+                    existingUser.setTitle(user.getTitle());
+                    existingUser.setBio(user.getBio());
+                    existingUser.setLocation(user.getLocation());
+                    existingUser.setCompany(user.getCompany());
+                    existingUser.setCoverUrl(user.getCoverUrl());
+                    existingUser.setReputation(user.getReputation());
+                    existingUser.setFollowers(user.getFollowers());
+                    existingUser.setFollowing(user.getFollowing());
+                    existingUser.setIsVerified(user.getIsVerified());
+                    existingUser.setSocialLinks(user.getSocialLinks());
+                    existingUser.setStats(user.getStats());
+
+                    existingUser.getSkills().clear();
+
+                    if (user.getSkills() != null) {
+                        for (UserSkill skill : user.getSkills()) {
+                            skill.setUser(existingUser);
+                            existingUser.getSkills().add(skill);
+                        }
+                    }
+
+                    return userRepository.save(existingUser);
+                })
+                .orElseGet(() -> {
+                    log.info("User not found {}", user.getEmail());
+                    throw new ResourceNotFoundException("User not found {}", user.getEmail());
+                });
     }
 }
