@@ -58,6 +58,13 @@ public class JwtUtils {
         return claims.get("googleId", String.class);
     }
 
+    public String getName(String token) {
+
+        Claims claims = parseClaims(token);
+
+        return claims.get("name", String.class);
+    }
+
     public boolean validateToken(String token) {
         try {
             parseClaims(token);
