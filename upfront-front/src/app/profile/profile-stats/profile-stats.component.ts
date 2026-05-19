@@ -14,9 +14,7 @@ interface StatItem {
 
 @Component({
   selector: 'app-profile-stats',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatIconModule],
   template: `
     <div class="stats-card">
       <div class="card-header">

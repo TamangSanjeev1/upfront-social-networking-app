@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AVATARS } from '../../core/mock-data';
+import {Component, Input} from '@angular/core';
+import {AVATARS} from '../../core/mock-data';
+import {Utils} from "../../shared/utils/utils";
 
 @Component({
   selector: 'app-post-card',
@@ -55,4 +55,6 @@ export class PostCardComponent {
       }
     }
   }
+
+  protected readonly Utils = Utils;
 }

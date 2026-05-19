@@ -163,6 +163,9 @@ export class ProfileLinksComponent extends BaseComponent{
   ];
 
   visibleLinks() {
+    if (!this.user()!.socialLinks) {
+      return;
+    }
     const links = this.user()!.socialLinks;
     return this.linkConfigs.filter(c => links[c.key]);
   }

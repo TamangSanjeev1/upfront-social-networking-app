@@ -1,7 +1,10 @@
 <div class="post-card">
   <!-- Post header -->
   <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;">
-    <div class="avatar" [style.background]="avatarBg" style="width:40px;height:40px;font-size:13px;flex-shrink:0;">{{post.initials}}</div>
+      <img
+              [src]="post.user.profileImage || 'https://ui-avatars.com/api/?name=' + post.user.name"
+              [alt]="post.user.name"
+              class="w-14 h-14 rounded-full border-2 border-slate-200 object-cover">
     <div style="flex:1;min-width:0;">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
         <span style="font-weight:600;font-size:14px;">{{post.author}}</span>
@@ -11,7 +14,7 @@
           <span style="width:14px;height:14px;border-radius:3px;[style.background]='post.companyColor';display:inline-block;flex-shrink:0;"></span>
           {{post.company}}
         </a>
-        <span style="margin-left:auto;font-size:12px;color:#94a3b8;white-space:nowrap;">{{post.timeAgo}}</span>
+        <span style="margin-left:auto;font-size:12px;color:#94a3b8;white-space:nowrap;">{{Utils.timeAgo(post.createdAt)}}</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;" [style.background]="typeInfo.bg" [style.color]="typeInfo.color">{{typeInfo.label}}</span>

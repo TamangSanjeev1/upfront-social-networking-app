@@ -1,5 +1,5 @@
 <div id="createModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;" *ngIf="isOpen">
-  <div class="card" style="width:min(600px,calc(100vw - 32px));max-height:80vh;overflow-y:auto;border-radius:20px;padding:28px;animation:fadeUp 0.3s ease both;">
+  <div class="card" style="width:min(900px,calc(100vw - 32px));max-height:96vh;overflow-y:auto;border-radius:20px;padding:28px;animation:fadeUp 0.3s ease both;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <span style="font-size:18px;font-weight:700;">Create Post</span>
       <button (click)="close.emit()" style="width:32px;height:32px;border-radius:8px;border:none;background:#f1f3f9;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">✕</button>
@@ -10,15 +10,98 @@
       <button class="pill-tab" [class.active]="postType === 'salary'" (click)="setPostType('salary')">💰 Salary</button>
       <button class="pill-tab" [class.active]="postType === 'interview'" (click)="setPostType('interview')">🎯 Interview</button>
     </div>
-    <input type="text" placeholder="Title" style="width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:15px;font-weight:600;outline:none;margin-bottom:12px;background:transparent;color:inherit;">
-    <input type="text" placeholder="Company (optional)" style="width:100%;padding:10px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;margin-bottom:12px;background:transparent;color:inherit;">
-    <textarea placeholder="Share your thoughts, experience, or review…" rows="5" style="width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;resize:none;background:transparent;color:inherit;line-height:1.6;"></textarea>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px;">
-      <div style="display:flex;gap:8px;">
-        <button class="tag" style="padding:8px 12px;">🏷️ Add Tag</button>
-        <button class="tag" style="padding:8px 12px;">🔒 Anonymous</button>
+      <form [formGroup]="postForm">
+        <input type="text" placeholder="Title" style="width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:15px;font-weight:600;outline:none;margin-bottom:12px;background:transparent;color:inherit;" formControlName="title">
+          <div class="rf-error" *ngIf="submitted && f['title'].errors">
+              Min 10 letters needed.
+          </div>
+        <input type="text" placeholder="Company (optional)" style="width:100%;padding:10px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;margin-bottom:12px;background:transparent;color:inherit;" formControlName="company">
+        <input type="text" placeholder="Role" style="width:100%;padding:10px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;margin-bottom:12px;background:transparent;color:inherit;" formControlName="role">
+          <div class="rf-error" *ngIf="submitted && f['role'].errors">
+              Role is required.
+          </div>
+          <textarea placeholder="Share your thoughts, experience, or review…" rows="5" style="width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;resize:none;background:transparent;color:inherit;line-height:1.6;" formControlName="body"></textarea>
+          <div class="rf-error" *ngIf="submitted && f['body'].errors">
+              Min 20 letters needed.
+          </div>
+          <!-- ── TAGS ── -->
+          <section class="rf-section">
+              <h2 class="rf-section__label">
+                  Tags
+                  <span class="rf-section__sub">{{ selectedTags.length }} selected</span>
+              </h2>
+              <div class="rf-tag-grid">
+                  <button type="button"
+                          class="rf-tag-btn"
+                          *ngFor="let tag of availableTags"
+                          [class.rf-tag-btn--active]="selectedTags.includes(tag)"
+                          (click)="toggleTag(tag)">
+                      {{ tag }}
+                  </button>
+              </div>
+              <div class="rf-error" *ngIf="submitted && selectedTags.length === 0">
+                  Select at least one tag.
+              </div>
+          </section>
+          <!-- ── METRICS ── -->
+          <section class="rf-section">
+              <h2 class="rf-section__label">Metrics</h2>
+
+              <div class="rf-row">
+
+                  <!-- Star rating -->
+                  <div class="rf-field rf-field--grow">
+                      <label class="rf-label">Rating</label>
+                      <div class="rf-stars">
+                          <button type="button"
+                                  class="rf-star"
+                                  *ngFor="let s of starsArray(5)"
+                                  [class.rf-star--lit]="s <= (ratingHover || currentRating)"
+                                  (mouseenter)="ratingHover = s"
+                                  (mouseleave)="ratingHover = 0"
+                                  (click)="setRating(s)"
+                                  [attr.aria-label]="'Rate ' + s + ' stars'">★</button>
+                          <span class="rf-star-value">{{ currentRating | number:'1.1-1' }}</span>
+                      </div>
+                      <div class="rf-error" *ngIf="submitted && f['rating'].errors">Rating is required.</div>
+                  </div>
+              </div>
+
+              <!-- Sentiment -->
+              <div class="rf-field">
+                  <label class="rf-label">Sentiment</label>
+                  <div class="rf-sentiment">
+                      <label class="rf-sentiment-opt"
+                             *ngFor="let s of sentimentOptions"
+                             [class.rf-sentiment-opt--active]="f['sentiment'].value === s.value"
+                             [attr.data-sentiment]="s.value">
+                          <input type="radio"
+                                 formControlName="sentiment"
+                                 [value]="s.value"
+                                 class="rf-sentiment-radio" />
+                          <span class="rf-sentiment-icon">{{ s.icon }}</span>
+                          <span class="rf-sentiment-label">{{ s.label }}</span>
+                      </label>
+                  </div>
+                  <div class="rf-error" *ngIf="submitted && f['sentiment'].errors">Sentiment is required.</div>
+              </div>
+          </section>
+
+
+          <button
+                  mat-flat-button
+                  class="btn-save"
+                  [disabled]="saving()"
+                  (click)="submitForm()"
+          >
+              @if (saving()) {
+                  <mat-spinner diameter="18" class="spinner"></mat-spinner>
+                  Posting...
+              } @else {
+                  <mat-icon>save</mat-icon>
+                  Create Post
+              }
+          </button>
+      </form>
       </div>
-      <button (click)="close.emit()" style="padding:10px 24px;border-radius:12px;border:none;background:var(--brand);color:white;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">Post →</button>
-    </div>
-  </div>
 </div>
