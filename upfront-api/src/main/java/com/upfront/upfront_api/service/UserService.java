@@ -5,12 +5,14 @@ import com.upfront.upfront_api.entity.User;
 import com.upfront.upfront_api.entity.UserSkill;
 import com.upfront.upfront_api.exception.ResourceNotFoundException;
 import com.upfront.upfront_api.repository.UserRepository;
+import com.upfront.upfront_api.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -81,6 +83,20 @@ public class UserService {
                 .orElseGet(() -> {
                     log.info("User not found {}", user.getEmail());
                     throw new ResourceNotFoundException("User not found {}", user.getEmail());
+                });
+    }
+
+    public void updateUserCounts() {
+        userRepository.findById(Objects.requireNonNull(SecurityUtils.getCurrentUserId()))
+                .map(existingUser -> {
+                    log.info("User found: {}", existingUser.getEmail());
+                    existingUser.setKarma(existingUser.getKarma()+1);
+                    existingUser.setPostCount(existingUser.getPostCount()+1);
+                    return userRepository.save(existingUser);
+                })
+                .orElseGet(() -> {
+                    log.info("User not found");
+                    throw new ResourceNotFoundException("User not found", null);
                 });
     }
 }

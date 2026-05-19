@@ -46,6 +46,11 @@ public class User {
 
     private Long reputation;
 
+    private int karma = 0;
+    private int postCount = 0;
+    private int likes = 0;
+    private int postViews = 0;
+
     private Integer followers;
 
     private Integer following;
