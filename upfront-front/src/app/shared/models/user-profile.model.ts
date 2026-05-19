@@ -34,7 +34,8 @@ export interface ActivityPost {
 }
 
 export interface UserProfile {
-  id: number;
+  id: string;
+  displayName: string;
   username: string;
   title: string;
   bio: string;
@@ -52,9 +53,4 @@ export interface UserProfile {
   skills: Skill[];
   stats: ActivityStats;
   activity: ActivityPost[];
-  name: string;
-  email: string;
-  profileImage: string;
-  createdAt: string;
-  lastLogin: string;
 }

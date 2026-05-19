@@ -34,7 +34,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         User user = userService.processOAuthLogin(oAuth2User.getAttributes());
 
-        String token = jwtUtils.generateToken(user.getEmail(), user.getName(), user.getProfileImage());
+        String token = jwtUtils.generateToken(user.getEmail(), user.getName(), user.getProfileImage(), user.getGoogleId(), user.getId());
 
         String redirectUrl = UriComponentsBuilder.fromUriString(appBaseUrl + "/auth/callback")
                 .queryParam("token", token)

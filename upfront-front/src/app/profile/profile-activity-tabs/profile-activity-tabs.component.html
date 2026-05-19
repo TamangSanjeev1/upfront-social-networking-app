@@ -1,0 +1,89 @@
+<div class="activity-card">
+  <div class="activity-header">
+    <h2 class="card-title">
+      <mat-icon class="title-icon">timeline</mat-icon>
+      Activity
+    </h2>
+  </div>
+
+  <!-- Custom Tab Bar -->
+  <div class="tab-bar" role="tablist">
+    @for (tab of tabs; track tab.type) {
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === tab.type"
+        (click)="activeTab.set(tab.type)"
+        role="tab"
+        [attr.aria-selected]="activeTab() === tab.type"
+      >
+        <mat-icon class="tab-icon">{{ tab.icon }}</mat-icon>
+        <span class="tab-label">{{ tab.label }}</span>
+        @if (tabCount(tab.type) > 0) {
+          <span class="tab-count">{{ tabCount(tab.type) }}</span>
+        }
+      </button>
+    }
+  </div>
+
+  <!-- Activity Feed -->
+  <div class="activity-feed" role="tabpanel">
+    @if (filteredActivity().length === 0) {
+      <div class="empty-state">
+        <mat-icon class="empty-icon">inbox</mat-icon>
+        <p>No activity yet</p>
+      </div>
+    }
+
+    @for (item of filteredActivity(); track item.id) {
+      <article class="activity-post" [class]="'activity-post--' + item.type">
+        <!-- Type badge + meta -->
+        <div class="post-meta">
+          <span
+            class="type-badge"
+            [style.color]="typeConfig(item.type).color"
+            [style.background]="typeConfig(item.type).bg"
+          >
+            <mat-icon class="badge-icon">{{ typeConfig(item.type).icon }}</mat-icon>
+            {{ typeConfig(item.type).label }}
+          </span>
+          @if (item.community) {
+            <span class="community-tag">{{ item.community }}</span>
+          }
+          <span class="timestamp">{{ item.timestamp }}</span>
+        </div>
+
+        <!-- Title -->
+        <h3 class="post-title">{{ item.title }}</h3>
+
+        <!-- Excerpt -->
+        <p class="post-excerpt">{{ item.excerpt }}</p>
+
+        <!-- Tags -->
+        <div class="post-tags">
+          @for (tag of item.tags; track tag) {
+            <span class="post-tag">#{{ tag }}</span>
+          }
+        </div>
+
+        <!-- Engagement -->
+        <div class="post-engagement">
+          <span class="engagement-item">
+            <mat-icon>thumb_up_alt</mat-icon>
+            {{ formatUpvotes(item.upvotes) }}
+          </span>
+          <span class="engagement-item">
+            <mat-icon>chat_bubble_outline</mat-icon>
+            {{ item.comments }}
+          </span>
+          <div class="engagement-spacer"></div>
+          <button class="share-btn">
+            <mat-icon>share</mat-icon>
+          </button>
+          <button class="bookmark-btn">
+            <mat-icon>bookmark_border</mat-icon>
+          </button>
+        </div>
+      </article>
+    }
+  </div>
+</div>

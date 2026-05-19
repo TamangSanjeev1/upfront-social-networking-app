@@ -1,0 +1,178 @@
+<div class="dialog-wrapper">
+  <!-- Dialog Header -->
+  <div class="dialog-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <mat-icon>edit</mat-icon>
+      </div>
+      <div>
+        <h2 class="dialog-title">Edit Profile</h2>
+        <p class="dialog-subtitle">Update your public profile information</p>
+      </div>
+    </div>
+    <button class="close-btn" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <mat-tab-group class="dialog-tabs" animationDuration="200ms">
+    <!-- Basic Info Tab -->
+    <mat-tab label="Basic Info">
+      <ng-template matTabLabel>
+        <mat-icon class="tab-icon-small">person_outline</mat-icon>
+        Basic Info
+      </ng-template>
+
+      <div class="tab-content">
+        <form [formGroup]="form" autocomplete="off">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Display Name</mat-label>
+              <input matInput formControlName="name" placeholder="Your full name" />
+              <mat-icon matPrefix>badge</mat-icon>
+              <mat-error *ngIf="hasError('displayName', 'required')">Name is required</mat-error>
+              <mat-error *ngIf="hasError('displayName', 'minlength')">At least 2 characters</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="email" placeholder="e.g. alex.chen" />
+              <mat-icon matPrefix>alternate_email</mat-icon>
+              <mat-hint>Only letters, numbers, dots, underscores</mat-hint>
+              <mat-error *ngIf="hasError('username', 'required')">Username is required</mat-error>
+              <mat-error *ngIf="hasError('username', 'pattern')">Invalid characters</mat-error>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="form-field form-field--full">
+            <mat-label>Professional Title</mat-label>
+            <input matInput formControlName="title" placeholder="e.g. Senior Full-Stack Engineer" />
+            <mat-icon matPrefix>work_outline</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field form-field--full">
+            <mat-label>Bio</mat-label>
+            <textarea
+              matInput
+              formControlName="bio"
+              rows="4"
+              placeholder="Tell the community a bit about yourself..."
+            ></textarea>
+            <mat-hint align="end">{{ bioLength }}/500</mat-hint>
+            <mat-error *ngIf="hasError('bio', 'maxlength')">Max 500 characters</mat-error>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Location</mat-label>
+              <input matInput formControlName="location" placeholder="City, Country" />
+              <mat-icon matPrefix>location_on</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Company</mat-label>
+              <input matInput formControlName="company" placeholder="Where you work" />
+              <mat-icon matPrefix>business</mat-icon>
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+
+    <!-- Social Links Tab -->
+    <mat-tab>
+      <ng-template matTabLabel>
+        <mat-icon class="tab-icon-small">link</mat-icon>
+        Social Links
+      </ng-template>
+
+      <div class="tab-content">
+        <form [formGroup]="form" autocomplete="off">
+          <div class="links-section">
+            <div class="link-row">
+              <div class="link-platform github">
+                <span class="platform-dot"></span>
+                GitHub
+              </div>
+              <mat-form-field appearance="outline" class="form-field form-field--link">
+                <mat-label>GitHub URL</mat-label>
+                <input matInput formControlName="github" placeholder="https://github.com/username" />
+                <mat-icon matSuffix>open_in_new</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="link-row">
+              <div class="link-platform linkedin">
+                <span class="platform-dot"></span>
+                LinkedIn
+              </div>
+              <mat-form-field appearance="outline" class="form-field form-field--link">
+                <mat-label>LinkedIn URL</mat-label>
+                <input matInput formControlName="linkedin" placeholder="https://linkedin.com/in/username" />
+                <mat-icon matSuffix>open_in_new</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="link-row">
+              <div class="link-platform twitter">
+                <span class="platform-dot"></span>
+                Twitter / X
+              </div>
+              <mat-form-field appearance="outline" class="form-field form-field--link">
+                <mat-label>Twitter URL</mat-label>
+                <input matInput formControlName="twitter" placeholder="https://twitter.com/username" />
+                <mat-icon matSuffix>open_in_new</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="link-row">
+              <div class="link-platform portfolio">
+                <span class="platform-dot"></span>
+                Portfolio
+              </div>
+              <mat-form-field appearance="outline" class="form-field form-field--link">
+                <mat-label>Portfolio URL</mat-label>
+                <input matInput formControlName="portfolio" placeholder="https://yourportfolio.dev" />
+                <mat-icon matSuffix>open_in_new</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="link-row">
+              <div class="link-platform website">
+                <span class="platform-dot"></span>
+                Website
+              </div>
+              <mat-form-field appearance="outline" class="form-field form-field--link">
+                <mat-label>Website / Blog URL</mat-label>
+                <input matInput formControlName="website" placeholder="https://yourblog.com" />
+                <mat-icon matSuffix>open_in_new</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- Dialog Footer -->
+  <div class="dialog-footer">
+    <button mat-button class="btn-cancel" (click)="close()">
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      class="btn-save"
+      [disabled]="saving()"
+      (click)="save()"
+    >
+      @if (saving()) {
+        <mat-spinner diameter="18" class="spinner"></mat-spinner>
+        Saving...
+      } @else {
+        <mat-icon>save</mat-icon>
+        Save Changes
+      }
+    </button>
+  </div>
+</div>

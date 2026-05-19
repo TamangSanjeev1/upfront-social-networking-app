@@ -18,6 +18,10 @@ export class AuthService {
       return;
     }
 
+    this.updateUserDetails();
+  }
+
+  updateUserDetails() {
     this.fetchCurrentUser().subscribe({
       next: user => this.currentUser.set(user),
       error: () => this.logout()
