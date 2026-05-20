@@ -33,8 +33,20 @@
   <h3 style="font-size:16px;font-weight:700;line-height:1.35;margin-bottom:8px;letter-spacing:-0.3px;">{{post.title}}</h3>
 
   <!-- Body -->
-  <p style="font-size:14px;color:#64748b;line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">{{post.body}}</p>
+    <p
+            [class.expanded]="expandedPosts[post.id]"
+            class="post-body"
+    >
+        {{ post.body }}
+    </p>
 
+    <span
+            *ngIf="post.body?.length > 180"
+            class="see-more"
+            (click)="togglePost(post.id)"
+    >
+      {{ expandedPosts[post.id] ? 'See less' : 'See more' }}
+    </span>
   <!-- Tags -->
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
     <span *ngFor="let t of post.tags" class="tag">{{t}}</span>

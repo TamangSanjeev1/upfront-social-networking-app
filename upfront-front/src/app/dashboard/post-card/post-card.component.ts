@@ -9,6 +9,11 @@ import {Utils} from "../../shared/utils/utils";
 })
 export class PostCardComponent {
   @Input() post: any;
+  expandedPosts: { [key: number]: boolean } = {};
+
+  togglePost(postId: number) {
+    this.expandedPosts[postId] = !this.expandedPosts[postId];
+  }
 
   get avatarBg() {
     return AVATARS.colors[this.post.avatarColor];
