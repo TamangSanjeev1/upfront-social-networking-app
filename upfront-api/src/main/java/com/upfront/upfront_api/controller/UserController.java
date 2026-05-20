@@ -43,7 +43,10 @@ public class UserController {
         response.put("isVerified", user.getIsVerified());
         response.put("socialLinks", user.getSocialLinks());
         response.put("stats", user.getStats());
-        response.put("skills", user.getSkills());
+        response.put("karma", user.getKarma());
+        response.put("postCount", user.getPostCount());
+        response.put("likes", user.getLikes());
+        response.put("postViews", user.getPostViews());
         return ResponseEntity.ok(response);
     }
 

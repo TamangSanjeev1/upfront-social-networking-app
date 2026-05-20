@@ -10,6 +10,10 @@ import {PostFeedComponent} from "./post-feed/post-feed.component";
 import {RightSidebarComponent} from "./right-sidebar/right-sidebar.component";
 import {SidebarComponent} from "./sidebar/sidebar.component";
 import {NavbarComponent} from "../shared/components/navbar/navbar.component";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatButton} from "@angular/material/button";
+import {MatIcon} from "@angular/material/icon";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 
 @NgModule({
@@ -26,7 +30,11 @@ import {NavbarComponent} from "../shared/components/navbar/navbar.component";
         CommonModule,
         DashboardRoutingModule,
         CommonModule,
-        NavbarComponent
+        NavbarComponent,
+        ReactiveFormsModule,
+        MatButton,
+        MatIcon,
+        MatProgressSpinner
     ]
 })
 export class DashboardModule { }

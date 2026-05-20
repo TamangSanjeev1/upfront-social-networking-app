@@ -14,6 +14,7 @@ import {UserProfile} from "../../core/models/common-model";
 import {BaseService} from "../../shared/services/base-service/base.service";
 import {BaseComponent} from "../../core/components/base.component";
 import {AuthService} from "../../core/services/auth.service";
+import {Apiconstants} from "../../shared/apiconstants";
 
 @Component({
   selector: 'app-edit-profile-dialog',
@@ -84,7 +85,7 @@ export class EditProfileDialogComponent extends BaseComponent implements OnInit 
           portfolio: v.portfolio,
           website: v.website,
         },
-      },'/api/user').subscribe({
+      },Apiconstants.USER).subscribe({
         next: user => {
           this.authService.updateUserDetails()
           this.saving.set(false);

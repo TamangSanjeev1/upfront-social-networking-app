@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AVATARS } from '../../core/mock-data';
+import {Component, Input} from '@angular/core';
+import {AVATARS} from '../../core/mock-data';
+import {Utils} from "../../shared/utils/utils";
 
 @Component({
   selector: 'app-post-card',
@@ -9,6 +9,11 @@ import { AVATARS } from '../../core/mock-data';
 })
 export class PostCardComponent {
   @Input() post: any;
+  expandedPosts: { [key: number]: boolean } = {};
+
+  togglePost(postId: number) {
+    this.expandedPosts[postId] = !this.expandedPosts[postId];
+  }
 
   get avatarBg() {
     return AVATARS.colors[this.post.avatarColor];
@@ -55,4 +60,6 @@ export class PostCardComponent {
       }
     }
   }
+
+  protected readonly Utils = Utils;
 }

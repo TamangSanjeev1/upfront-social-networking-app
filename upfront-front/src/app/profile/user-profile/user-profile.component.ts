@@ -1,8 +1,5 @@
 import {Component, inject} from '@angular/core';
 import {ProfileService} from "../../shared/services/profile.service";
-import {ProfileBioComponent} from "../profile-bio/profile-bio.component";
-import {ProfileLinksComponent} from "../profile-links/profile-links.component";
-import {ProfileStatsComponent} from "../profile-stats/profile-stats.component";
 import {ProfileSkillsComponent} from "../profile-skills/profile-skills.component";
 import {ProfileActivityTabsComponent} from "../profile-activity-tabs/profile-activity-tabs.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
@@ -13,7 +10,6 @@ import {DashboardModule} from "../../dashboard/dashboard.module";
   selector: 'app-user-profile',
   standalone: true,
   imports: [
-    ProfileStatsComponent,
     ProfileSkillsComponent,
     ProfileActivityTabsComponent,
     NavbarComponent,

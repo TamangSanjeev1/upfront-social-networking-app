@@ -30,4 +30,8 @@ public class UserDto {
     private SocialLinks socialLinks;
     private UserStats stats;
     private List<UserSkill> skills = new ArrayList<>();
+    private Integer karma = 0;
+    private Integer postCount = 0;
+    private Integer likes = 0;
+    private Integer postViews = 0;
 }

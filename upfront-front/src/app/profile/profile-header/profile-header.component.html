@@ -65,11 +65,11 @@
 
       <!-- Meta info -->
       <div class="meta-row">
-        <span class="meta-item">
+        <span class="meta-item" *ngIf="user()!.location">
           <mat-icon>location_on</mat-icon>
-          {{ user()!.location }}
+          {{ user()!.location  }}
         </span>
-        <span class="meta-item">
+        <span class="meta-item" *ngIf="user()!.company">
           <mat-icon>business</mat-icon>
           {{ user()!.company }}
         </span>
@@ -82,17 +82,17 @@
       <!-- Followers/Following -->
       <div class="social-counts">
         <button class="count-item">
-          <span class="count-value">{{ formatNumber(ps.profile().followers) }}</span>
+          <span class="count-value">{{ user()!.followers ? formatNumber(user()!.followers) : 0 }}</span>
           <span class="count-label">Followers</span>
         </button>
         <span class="count-divider">·</span>
         <button class="count-item">
-          <span class="count-value">{{ formatNumber(ps.profile().following) }}</span>
+          <span class="count-value">{{ user()!.following ? formatNumber(user()!.following) : 0 }}</span>
           <span class="count-label">Following</span>
         </button>
         <span class="count-divider">·</span>
         <div class="count-item">
-          <span class="count-value">{{ formatNumber(ps.profile().stats.upvotes) }}</span>
+          <span class="count-value">{{ user()!.likes ? formatNumber(user()!.likes) : 0 }}</span>
           <span class="count-label">Upvotes received</span>
         </div>
       </div>

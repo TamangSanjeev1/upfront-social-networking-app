@@ -14,13 +14,15 @@ public class UserPrincipal implements UserDetails {
     private Long id;
     private String email;
     private String googleId;
+    private String name;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(String email, Long id, String googleId) {
+    public UserPrincipal(String email, Long id, String googleId, String name) {
         this.id = id;
         this.email = email;
         this.googleId = googleId;
+        this.name = name;
     }
 
     @Override

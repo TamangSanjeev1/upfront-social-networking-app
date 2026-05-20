@@ -57,4 +57,8 @@ export interface UserProfile {
   profileImage: string;
   createdAt: string;
   lastLogin: string;
+  karma:number;
+  postCount:number;
+  likes:number;
+  postViews:number;
 }

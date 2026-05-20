@@ -9,18 +9,21 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatChipsModule} from "@angular/material/chips";
 import {ProfileLinksComponent} from "./profile-links/profile-links.component";
 import {ProfileBioComponent} from "./profile-bio/profile-bio.component";
+import {ProfileStatsComponent} from "./profile-stats/profile-stats.component";
 
 
 @NgModule({
   declarations: [
     ProfileHeaderComponent,
     ProfileLinksComponent,
-    ProfileBioComponent
+    ProfileBioComponent,
+      ProfileStatsComponent
   ],
   exports: [
     ProfileHeaderComponent,
     ProfileLinksComponent,
-    ProfileBioComponent
+    ProfileBioComponent,
+    ProfileStatsComponent
   ],
   imports: [
     CommonModule,

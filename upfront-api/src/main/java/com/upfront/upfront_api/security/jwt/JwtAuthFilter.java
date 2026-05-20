@@ -33,10 +33,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String email = jwtUtils.getEmailFromToken(token);
             Long id = jwtUtils.getId(token);
             String googleId = jwtUtils.getGoogleId(token);
+            String name = jwtUtils.getName(token);
             UserPrincipal principal = new UserPrincipal(
                     email,
                     id,
-                    googleId
+                    googleId,
+                    name
             );
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(principal, null, Collections.emptyList());

@@ -54,3 +54,22 @@ export interface UserProfile {
   stats: ActivityStats;
   activity: ActivityPost[];
 }
+
+export interface Post {
+  id: string;
+  type: string;
+  author: string;
+  timeAgo: string;
+  company: string;
+  role: string;
+  title: string;
+  body: string;
+  tags: [];
+  rating: number;
+  salary: string;
+  upvotes: number;
+  comments: number;
+  isUpvoted: boolean;
+  isVerified: boolean;
+  sentiment: string;
+}
