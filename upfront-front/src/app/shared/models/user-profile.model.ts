@@ -84,3 +84,13 @@ export interface NotificationModel {
     body: string;
     time: string;
 }
+
+export interface PagedResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  first: boolean;
+}

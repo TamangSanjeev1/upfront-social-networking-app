@@ -1,12 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { POSTS } from '../../core/mock-data';
-import { PostCardComponent } from '../post-card/post-card.component';
-import {filter, Subscription} from "rxjs";
+import {Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
+import {Subject, Subscription, takeUntil} from "rxjs";
 import {BaseService} from "../../shared/services/base-service/base.service";
-import {Apiconstants} from "../../shared/apiconstants";
 import {Post} from "../../shared/models/user-profile.model";
 import {RefreshService} from "../../shared/services/services/refresh-service";
+import {PostService} from "../../shared/services/services/post.service";
 
 @Component({
   selector: 'app-post-feed',
@@ -18,9 +15,18 @@ export class PostFeedComponent implements OnInit {
   filteredPosts: Post[] = [];
   activeFilter = 'hot';
   fadeOut = false;
+  page = 0;
+  size = 10;
+  isLoading = false;
+  isInitialLoad = true;
+  hasMore = true;
+  error: string | null = null;
   private subscription?: Subscription;
+  @ViewChild('scrollAnchor') scrollAnchor!: ElementRef;
+  private observer!: IntersectionObserver;
+  private destroy$ = new Subject<void>();
 
-  constructor(private apiService: BaseService, private refreshService: RefreshService) {
+  constructor(private apiService: BaseService, private refreshService: RefreshService, private postService: PostService, private ngZone: NgZone) {
   }
 
   ngOnInit() {
@@ -33,11 +39,60 @@ export class PostFeedComponent implements OnInit {
             });
   }
 
+  ngAfterViewInit(): void {
+    this.setupIntersectionObserver();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.observer?.disconnect();
+  }
+
+  setupIntersectionObserver(): void {
+    this.observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting && !this.isLoading && this.hasMore) {
+            this.ngZone.run(() => this.fetchPosts());
+          }
+        },
+        { threshold: 0.1, rootMargin: '200px' }
+    );
+    if (this.scrollAnchor) {
+      this.observer.observe(this.scrollAnchor.nativeElement);
+    }
+  }
+
   fetchPosts() {
-    this.apiService.getRequest(Apiconstants.POST).subscribe(response => {
-      this.posts = [...response];
-      this.filteredPosts = [...response];
+    if (this.isLoading || !this.hasMore) return;
+    this.isLoading = true;
+    this.error = null;
+
+    const request$ = this.activeFilter != "hot"
+        ? this.postService.getPostsByTag(this.activeFilter, this.page, this.size)
+        : this.postService.getPosts(this.page, this.size);
+
+    request$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (response) => {
+        this.posts = [...this.posts, ...response.content];
+        this.filteredPosts = [...this.posts];
+        this.hasMore = !response.last;
+        this.page++;
+        this.isLoading = false;
+        this.isInitialLoad = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load posts!';
+        this.isLoading = false;
+        this.isInitialLoad = false;
+        console.error(err);
+      }
     });
+  }
+
+  trackByPostId(_index: number, post: Post): string {
+    return post.id;
   }
 
   setFilter(filter: string) {
@@ -53,15 +108,12 @@ export class PostFeedComponent implements OnInit {
   }
 
   applyFilter() {
-    // For demo purposes, we just shuffle or filter based on mock data
-    if (this.activeFilter === 'reviews') {
-      this.filteredPosts = this.posts.filter(p => p.type === 'review');
-    } else if (this.activeFilter === 'salaries') {
-      this.filteredPosts = this.posts.filter(p => p.type === 'salary');
-    } else if (this.activeFilter === 'interviews') {
-      this.filteredPosts = this.posts.filter(p => p.type === 'interview');
-    } else {
-      this.filteredPosts = [...this.posts];
-    }
+    this.hasMore = true;
+    this.page = 0;
+    this.size = 10;
+    this.isInitialLoad = true;
+    this.posts = [];
+    this.filteredPosts = [];
+    this.fetchPosts();
   }
 }

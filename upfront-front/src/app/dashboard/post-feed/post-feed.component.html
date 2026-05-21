@@ -3,13 +3,38 @@
   <button class="filter-chip" [class.active]="activeFilter === 'hot'" (click)="setFilter('hot')">🔥 Hot</button>
   <button class="filter-chip" [class.active]="activeFilter === 'new'" (click)="setFilter('new')">✨ New</button>
   <button class="filter-chip" [class.active]="activeFilter === 'top'" (click)="setFilter('top')">📈 Top</button>
-  <button class="filter-chip" [class.active]="activeFilter === 'reviews'" (click)="setFilter('reviews')">⭐ Reviews</button>
-  <button class="filter-chip" [class.active]="activeFilter === 'salaries'" (click)="setFilter('salaries')">💰 Salaries</button>
-  <button class="filter-chip" [class.active]="activeFilter === 'interviews'" (click)="setFilter('interviews')">🎯 Interviews</button>
+  <button class="filter-chip" [class.active]="activeFilter === 'reviews'" (click)="setFilter('review')">⭐ Reviews</button>
+  <button class="filter-chip" [class.active]="activeFilter === 'salaries'" (click)="setFilter('salary')">💰 Salaries</button>
+  <button class="filter-chip" [class.active]="activeFilter === 'interviews'" (click)="setFilter('interview')">🎯 Interviews</button>
   <button class="filter-chip" [class.active]="activeFilter === 'wfh'" (click)="setFilter('wfh')">🏠 WFH Culture</button>
 </div>
 
 <!-- Post Feed -->
 <div id="postFeed" style="display:flex;flex-direction:column;gap:14px;" [ngStyle]="{'opacity': fadeOut ? '0' : '1', 'transform': fadeOut ? 'translateY(4px)' : 'translateY(0)', 'transition': 'opacity 0.3s, transform 0.3s'}">
-  <app-post-card *ngFor="let p of filteredPosts" [post]="p"></app-post-card>
+
+    <!-- Error state -->
+    <div *ngIf="error && !isLoading" class="error-state">
+        <div class="error-icon">⚡</div>
+        <h3>Connection Error</h3>
+        <p>{{ error }}</p>
+        <button class="retry-btn" (click)="fetchPosts()">Retry</button>
+    </div>
+    <div *ngIf="!isInitialLoad && !error" >
+        <app-post-card *ngFor="let p of filteredPosts; trackBy: trackByPostId" [post]="p"></app-post-card>
+        <!-- Loading more spinner -->
+        <div *ngIf="isLoading && !isInitialLoad" class="loading-more">
+            <div class="spinner"></div>
+            <span>Loading more posts…</span>
+        </div>
+
+        <!-- End of feed -->
+        <div *ngIf="!hasMore && posts.length > 0" class="end-of-feed">
+            <div class="end-line"></div>
+            <span>You've reached the end</span>
+            <div class="end-line"></div>
+        </div>
+    </div>
+
+    <!-- Intersection observer anchor -->
+    <div #scrollAnchor class="scroll-anchor"></div>
 </div>
