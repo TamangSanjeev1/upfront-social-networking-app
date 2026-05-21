@@ -1,14 +1,17 @@
 package com.upfront.upfront_api.controller;
 
+import com.upfront.upfront_api.dto.NotificationDto;
 import com.upfront.upfront_api.dto.PostDto;
+import com.upfront.upfront_api.service.NotificationService;
 import com.upfront.upfront_api.service.PostServiceImpl;
 import com.upfront.upfront_api.service.UserService;
+import com.upfront.upfront_api.utils.NotificationEnum;
 import com.upfront.upfront_api.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -18,14 +21,24 @@ public class PostController {
 
     private final PostServiceImpl postService;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PostDto create(
-            @RequestBody PostDto request, Principal principal
+            @RequestBody PostDto request
     ) {
         userService.updateUserCounts();
-        return postService.create(request);
+        PostDto postDto = postService.create(request);
+        notificationService.sendNotificationGeneral(NotificationDto.builder()
+                        .unread(true)
+                        .iconBg(NotificationEnum.POST.getIconBg())
+                        .type(NotificationEnum.POST.getType())
+                        .title(NotificationEnum.POST.getTitle() + SecurityUtils.getCurrentName())
+                        .body(request.getTitle())
+                        .timestamp(LocalDateTime.now())
+                        .build());
+        return postDto;
 
     }
 

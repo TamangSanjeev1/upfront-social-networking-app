@@ -46,7 +46,7 @@ public final class SecurityUtils {
 
         UserPrincipal user = getCurrentUser();
 
-        return user != null ? user.getName() : null;
+        return user != null ? user.getUserName() : null;
     }
 
     public static String getGoogleId() {

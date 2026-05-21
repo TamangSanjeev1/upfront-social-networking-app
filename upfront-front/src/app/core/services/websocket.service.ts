@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
 import {TokenService} from "./token.service";
+import {NotificationModel} from "../../shared/models/user-profile.model";
 
 export interface Notification {
   id: string;
@@ -19,7 +20,7 @@ export type WsStatus = 'CONNECTING' | 'CONNECTED' | 'DISCONNECTED';
 export class WebSocketService implements OnDestroy {
 
   status = signal<WsStatus>('DISCONNECTED');
-  notifications$ = new Subject<Notification>();
+  notifications$ = new Subject<NotificationModel>();
 
   private client: Client | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
@@ -67,7 +68,7 @@ export class WebSocketService implements OnDestroy {
 
     // User-specific channel
     if (userEmail) {
-      this.client?.subscribe('/user/queue/notifications', (msg: IMessage) => {
+      this.client?.subscribe('/user/notifications/' + userEmail, (msg: IMessage) => {
         this.notifications$.next(JSON.parse(msg.body));
       });
     }
