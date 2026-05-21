@@ -1,17 +1,23 @@
 package com.upfront.upfront_api.service;
 
 import com.upfront.upfront_api.dto.NotificationDto;
+import com.upfront.upfront_api.dto.response.PagedResponse;
+import com.upfront.upfront_api.entity.NotificationEntity;
+import com.upfront.upfront_api.mapper.NotificationMapper;
+import com.upfront.upfront_api.repository.NotificationRepository;
+import com.upfront.upfront_api.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +26,7 @@ import java.util.UUID;
 public class NotificationService {
 
     private final SimpMessagingTemplate messagingTemplate;
+    private final NotificationRepository notificationRepository;
 
     private final List<String> SAMPLE_MESSAGES = List.of(
             "System health check completed successfully.",
@@ -46,7 +53,7 @@ public class NotificationService {
 //    @Scheduled(fixedDelay = 15000)
     public void sendBroadcastNotification() {
         NotificationDto notification = NotificationDto.builder()
-                .id(UUID.randomUUID().toString())
+                .id(1L)
                 .title("SAMPLE MESSAGE")
                 .body(SAMPLE_MESSAGES.get(random.nextInt(SAMPLE_MESSAGES.size())))
                 .type(TYPES.get(random.nextInt(TYPES.size())))
@@ -54,5 +61,36 @@ public class NotificationService {
                 .build();
         messagingTemplate.convertAndSend("/topic/notifications", notification);
         log.debug("Broadcast notification sent");
+    }
+
+    public PagedResponse<NotificationDto> getNotificationsByPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<NotificationEntity> result = notificationRepository.findAllByOrderByTimestampDesc(pageable);
+        return toPagedResponse(result, page, size);
+    }
+
+    public List<NotificationDto> getNotifications() {
+        return notificationRepository.findAllByOrderByTimestampDesc().stream().map(NotificationMapper::toResponse).toList();
+    }
+
+    public PagedResponse<NotificationDto> getUserBasedNotifications(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return toPagedResponse(notificationRepository.findByUserIdOrGlobal(SecurityUtils.getCurrentUserId(), pageable), page, size);
+    }
+
+    private PagedResponse<NotificationDto> toPagedResponse(Page<NotificationEntity> result, int page, int size) {
+        return new PagedResponse<>(
+                result.getContent().stream().map(NotificationMapper::toResponse).toList(),
+                page,
+                size,
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.isLast(),
+                result.isFirst()
+        );
+    }
+
+    public NotificationDto save(NotificationEntity notificationEntity) {
+        return NotificationMapper.toResponse(this.notificationRepository.save(notificationEntity));
     }
 }

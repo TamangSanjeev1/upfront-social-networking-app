@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationDto {
-    private String id;
+    private Long id;
     private String title;
     private String iconBg;
     private String body;
     private Boolean unread;
     private String type;
+    private UserDto user;
     private LocalDateTime timestamp;
 }

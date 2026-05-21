@@ -8,15 +8,15 @@ import {Apiconstants} from "../../apiconstants";
 @Injectable({
   providedIn: 'root'
 })
-export class PostService {
+export class PaginationService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts(page: number, size: number = 10): Observable<PagedResponse<Post>> {
+  getByPagination(page: number, size: number = 10, url: string): Observable<PagedResponse<any>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
-    return this.http.get<PagedResponse<Post>>(environment.apiUrl + Apiconstants.POST + Apiconstants.PAGINATION, { params });
+    return this.http.get<PagedResponse<any>>(environment.apiUrl + url + Apiconstants.PAGINATION, { params });
   }
 
   getPostsByTag(tag: string, page: number, size: number = 10): Observable<PagedResponse<Post>> {

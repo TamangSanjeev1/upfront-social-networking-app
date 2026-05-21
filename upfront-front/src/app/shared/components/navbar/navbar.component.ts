@@ -1,10 +1,13 @@
-import {Component, computed, EventEmitter, Output, signal} from '@angular/core';
+import {Component, computed, EventEmitter, OnDestroy, OnInit, Output, signal} from '@angular/core';
 import {AuthService} from "../../../core/services/auth.service";
 import {WebSocketService} from "../../../core/services/websocket.service";
 import {BaseComponent} from "../../../core/components/base.component";
 import {CommonModule} from "@angular/common";
 import {NotificationModel} from "../../models/user-profile.model";
 import {Subscription} from "rxjs";
+import {PaginationService} from "../../services/services/pagination.service";
+import {Apiconstants} from "../../apiconstants";
+import console from "node:console";
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +16,7 @@ import {Subscription} from "rxjs";
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent extends BaseComponent {
+export class NavbarComponent extends BaseComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
   @Output() themeChanged = new EventEmitter<boolean>();
   
@@ -24,7 +27,7 @@ export class NavbarComponent extends BaseComponent {
   wsStatus = computed(() => this.ws.status());
   private sub = new Subscription();
 
-  constructor(authService: AuthService, private ws: WebSocketService) {
+  constructor(authService: AuthService, private ws: WebSocketService, private notificationService: PaginationService) {
     super(authService);
   }
 
@@ -67,6 +70,7 @@ export class NavbarComponent extends BaseComponent {
   ngOnInit(): void {
     this.ws.connect();
     this.subscribeNotification();
+    this.fetchNotifications();
   }
 
   subscribeNotification() {
@@ -80,7 +84,22 @@ export class NavbarComponent extends BaseComponent {
   ngOnDestroy(): void {
     this.ws.disconnect();
     this.sub.unsubscribe();
+    super.destroy();
   }
 
   logout(): void { this.authService.logout(); }
+
+  fetchNotifications() {
+    this.notificationService.getByPagination(this.page, this.size, Apiconstants.NOTIFICATION).subscribe({
+      next: (response) => {
+        this.notifications.update(list =>
+            [...response.content, ...list].slice(0, 50)
+        );
+      },
+      error: (err) => {
+        this.error = 'Failed to load posts!';
+        console.error(err);
+      }
+    });
+  }
 }
