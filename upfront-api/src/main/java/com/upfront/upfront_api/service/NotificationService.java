@@ -33,16 +33,22 @@ public class NotificationService {
     private final Random random = new Random();
 
     public void sendNotificationToUser(String email, NotificationDto notification) {
-        messagingTemplate.convertAndSendToUser(email, "/queue/notifications", notification);
-        log.debug("Sent notification to {}: {}", email, notification.getMessage());
+        messagingTemplate.convertAndSend("/user/notifications/" + email, notification);
+        log.debug("Sent notification to {}: {}", email, notification.getBody());
+    }
+
+    public void sendNotificationGeneral(NotificationDto notification) {
+        messagingTemplate.convertAndSend("/topic/notifications", notification);
+        log.debug("Sent notification to : {}", notification);
     }
 
     // Broadcast a sample notification every 15 seconds (demo purposes)
-    @Scheduled(fixedDelay = 15000)
+//    @Scheduled(fixedDelay = 15000)
     public void sendBroadcastNotification() {
         NotificationDto notification = NotificationDto.builder()
                 .id(UUID.randomUUID().toString())
-                .message(SAMPLE_MESSAGES.get(random.nextInt(SAMPLE_MESSAGES.size())))
+                .title("SAMPLE MESSAGE")
+                .body(SAMPLE_MESSAGES.get(random.nextInt(SAMPLE_MESSAGES.size())))
                 .type(TYPES.get(random.nextInt(TYPES.size())))
                 .timestamp(LocalDateTime.now())
                 .build();

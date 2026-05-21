@@ -84,7 +84,7 @@ export class NotificationPanelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub.add(
       this.ws.notifications$.subscribe(n => {
-        this.notifications.update(list => [n, ...list].slice(0, 50));
+        // this.notifications.update(list => [n, ...list].slice(0, 50));
       })
     );
     // Sync WS status via effect-like polling

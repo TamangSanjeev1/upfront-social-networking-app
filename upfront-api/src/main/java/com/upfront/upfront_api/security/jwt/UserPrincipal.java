@@ -3,13 +3,13 @@ package com.upfront.upfront_api.security.jwt;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import java.security.Principal;
 import java.util.Collection;
 
 @Getter
 @AllArgsConstructor
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements Principal {
 
     private Long id;
     private String email;
@@ -26,12 +26,11 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
+    public String getName() {
         return email;
     }
 
-    @Override
-    public String getPassword() {
-        return null;
+    public String getUserName() {
+        return name;
     }
 }

@@ -73,3 +73,14 @@ export interface Post {
   isVerified: boolean;
   sentiment: string;
 }
+
+export interface NotificationModel {
+    id: number;
+    unread: boolean;
+    type: string;
+    icon: string;
+    iconBg: string;
+    title: string;
+    body: string;
+    time: string;
+}

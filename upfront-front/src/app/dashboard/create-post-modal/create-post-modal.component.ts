@@ -110,7 +110,8 @@ export class CreatePostModalComponent implements OnInit {
         this.postForm.reset();
         this.close.emit();
         this.refreshService.triggerRefresh();
-        this.authService.updateUserDetails()
+        this.authService.updateUserDetails();
+        this.setPostType("post");
         this.snackBar.open('Posted successfully!', '✕', {
           duration: 3500,
           panelClass: ['snack-success'],

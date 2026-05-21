@@ -12,7 +12,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class NotificationDto {
     private String id;
-    private String message;
-    private String type; // INFO, SUCCESS, WARNING
+    private String title;
+    private String iconBg;
+    private String body;
+    private Boolean unread;
+    private String type;
     private LocalDateTime timestamp;
 }

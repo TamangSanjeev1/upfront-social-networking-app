@@ -20,7 +20,8 @@ public class NotificationWebSocketController {
         if (principal != null) {
             NotificationDto pong = NotificationDto.builder()
                     .id(UUID.randomUUID().toString())
-                    .message("Connection verified — you are securely connected.")
+                    .title("Connection Verified")
+                    .body("Connection verified — you are securely connected.")
                     .type("SUCCESS")
                     .timestamp(LocalDateTime.now())
                     .build();
