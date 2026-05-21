@@ -2,6 +2,7 @@ package com.upfront.upfront_api.controller;
 
 import com.upfront.upfront_api.dto.NotificationDto;
 import com.upfront.upfront_api.dto.PostDto;
+import com.upfront.upfront_api.dto.response.PagedResponse;
 import com.upfront.upfront_api.service.NotificationService;
 import com.upfront.upfront_api.service.PostServiceImpl;
 import com.upfront.upfront_api.service.UserService;
@@ -9,6 +10,7 @@ import com.upfront.upfront_api.utils.NotificationEnum;
 import com.upfront.upfront_api.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -60,5 +62,20 @@ public class PostController {
             @PathVariable Long id
     ) {
         postService.delete(id);
+    }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<PagedResponse<PostDto>> getPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(postService.getPosts(page, size));
+    }
+
+    @GetMapping("/tag/{tag}")
+    public ResponseEntity<PagedResponse<PostDto>> getPostsByTag(
+            @PathVariable String tag,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(postService.getPostsByTag(tag, page, size));
     }
 }
