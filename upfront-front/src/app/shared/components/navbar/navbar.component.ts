@@ -8,6 +8,8 @@ import {Subscription} from "rxjs";
 import {PaginationService} from "../../services/services/pagination.service";
 import {Apiconstants} from "../../apiconstants";
 import console from "node:console";
+import {MatDialog} from "@angular/material/dialog";
+import {ViewNotificationComponent} from "../../../dashboard/view-notification/view-notification.component";
 
 @Component({
   selector: 'app-navbar',
@@ -27,7 +29,7 @@ export class NavbarComponent extends BaseComponent implements OnInit, OnDestroy 
   wsStatus = computed(() => this.ws.status());
   private sub = new Subscription();
 
-  constructor(authService: AuthService, private ws: WebSocketService, private notificationService: PaginationService) {
+  constructor(authService: AuthService, private ws: WebSocketService, private notificationService: PaginationService, private dialog: MatDialog) {
     super(authService);
   }
 
@@ -66,6 +68,16 @@ export class NavbarComponent extends BaseComponent implements OnInit, OnDestroy 
       },
       error:(err) => {
         console.log(err);
+      }
+    });
+  }
+
+  viewAllNotifications() {
+    this.dialog.open(ViewNotificationComponent, {
+      height: '900px',
+      width: '1200px',
+      data: {
+        id: ''
       }
     });
   }

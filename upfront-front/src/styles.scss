@@ -688,3 +688,25 @@ Notification
 .scroll-anchor {
   height: 1px;
 }
+
+/**
+Post Overflow
+ */
+.post-body {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 14px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+  /* prevent overflow */
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  max-width: 100%;
+}
