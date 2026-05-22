@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.UUID;
 
 @Controller
@@ -19,7 +20,7 @@ public class NotificationWebSocketController {
     public void handlePing(Principal principal) {
         if (principal != null) {
             NotificationDto pong = NotificationDto.builder()
-                    .id(UUID.randomUUID().toString())
+                    .id(new Random().nextLong())
                     .title("Connection Verified")
                     .body("Connection verified — you are securely connected.")
                     .type("SUCCESS")

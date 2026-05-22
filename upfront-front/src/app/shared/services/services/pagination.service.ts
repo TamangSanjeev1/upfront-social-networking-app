@@ -4,19 +4,22 @@ import { Observable } from 'rxjs';
 import {environment} from "../../../../environments/environment";
 import {PagedResponse, Post} from "../../models/user-profile.model";
 import {Apiconstants} from "../../apiconstants";
+import {BaseService} from "../base-service/base.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class PostService {
+export class PaginationService extends BaseService {
 
-  constructor(private http: HttpClient) {}
+  constructor(http: HttpClient) {
+    super(http);
+  }
 
-  getPosts(page: number, size: number = 10): Observable<PagedResponse<Post>> {
+  getByPagination(page: number, size: number = 10, url: string): Observable<PagedResponse<any>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
-    return this.http.get<PagedResponse<Post>>(environment.apiUrl + Apiconstants.POST + Apiconstants.PAGINATION, { params });
+    return this.http.get<PagedResponse<any>>(environment.apiUrl + url + Apiconstants.PAGINATION, { params });
   }
 
   getPostsByTag(tag: string, page: number, size: number = 10): Observable<PagedResponse<Post>> {

@@ -1,32 +1,28 @@
-import {Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
-import {Subject, Subscription, takeUntil} from "rxjs";
+import {Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {filter, Subject, Subscription, takeUntil} from "rxjs";
 import {BaseService} from "../../shared/services/base-service/base.service";
 import {Post} from "../../shared/models/user-profile.model";
 import {RefreshService} from "../../shared/services/services/refresh-service";
-import {PostService} from "../../shared/services/services/post.service";
+import {PaginationService} from "../../shared/services/services/pagination.service";
+import {Apiconstants} from "../../shared/apiconstants";
+import {BaseComponent} from "../../core/components/base.component";
+import {AuthService} from "../../core/services/auth.service";
+import * as console from "node:console";
 
 @Component({
   selector: 'app-post-feed',
   templateUrl: './post-feed.component.html',
   styleUrl: './post-feed.component.css'
 })
-export class PostFeedComponent implements OnInit {
+export class PostFeedComponent extends BaseComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   filteredPosts: Post[] = [];
   activeFilter = 'hot';
   fadeOut = false;
-  page = 0;
-  size = 10;
-  isLoading = false;
-  isInitialLoad = true;
-  hasMore = true;
-  error: string | null = null;
-  private subscription?: Subscription;
   @ViewChild('scrollAnchor') scrollAnchor!: ElementRef;
-  private observer!: IntersectionObserver;
-  private destroy$ = new Subject<void>();
-
-  constructor(private apiService: BaseService, private refreshService: RefreshService, private postService: PostService, private ngZone: NgZone) {
+  private subscription?: Subscription;
+  constructor(authService: AuthService, private apiService: BaseService, private refreshService: RefreshService, private postService: PaginationService) {
+    super(authService);
   }
 
   ngOnInit() {
@@ -44,24 +40,7 @@ export class PostFeedComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.observer?.disconnect();
-  }
-
-  setupIntersectionObserver(): void {
-    this.observer = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0];
-          if (entry.isIntersecting && !this.isLoading && this.hasMore) {
-            this.ngZone.run(() => this.fetchPosts());
-          }
-        },
-        { threshold: 0.1, rootMargin: '200px' }
-    );
-    if (this.scrollAnchor) {
-      this.observer.observe(this.scrollAnchor.nativeElement);
-    }
+    super.destroy();
   }
 
   fetchPosts() {
@@ -71,7 +50,7 @@ export class PostFeedComponent implements OnInit {
 
     const request$ = this.activeFilter != "hot"
         ? this.postService.getPostsByTag(this.activeFilter, this.page, this.size)
-        : this.postService.getPosts(this.page, this.size);
+        : this.postService.getByPagination(this.page, this.size, Apiconstants.POST);
 
     request$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
@@ -89,10 +68,6 @@ export class PostFeedComponent implements OnInit {
         console.error(err);
       }
     });
-  }
-
-  trackByPostId(_index: number, post: Post): string {
-    return post.id;
   }
 
   setFilter(filter: string) {
@@ -115,5 +90,20 @@ export class PostFeedComponent implements OnInit {
     this.posts = [];
     this.filteredPosts = [];
     this.fetchPosts();
+  }
+
+  setupIntersectionObserver(): void {
+    this.observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting && !this.isLoading && this.hasMore) {
+            this.ngZone.run(() => this.fetchPosts());
+          }
+        },
+        { threshold: 0.1, rootMargin: '200px' }
+    );
+    if (this.scrollAnchor) {
+      this.observer.observe(this.scrollAnchor.nativeElement);
+    }
   }
 }
