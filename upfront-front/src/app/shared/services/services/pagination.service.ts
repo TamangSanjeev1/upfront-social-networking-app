@@ -4,13 +4,16 @@ import { Observable } from 'rxjs';
 import {environment} from "../../../../environments/environment";
 import {PagedResponse, Post} from "../../models/user-profile.model";
 import {Apiconstants} from "../../apiconstants";
+import {BaseService} from "../base-service/base.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class PaginationService {
+export class PaginationService extends BaseService {
 
-  constructor(private http: HttpClient) {}
+  constructor(http: HttpClient) {
+    super(http);
+  }
 
   getByPagination(page: number, size: number = 10, url: string): Observable<PagedResponse<any>> {
     const params = new HttpParams()

@@ -3,9 +3,11 @@ package com.upfront.upfront_api.service;
 import com.upfront.upfront_api.dto.NotificationDto;
 import com.upfront.upfront_api.dto.response.PagedResponse;
 import com.upfront.upfront_api.entity.NotificationEntity;
+import com.upfront.upfront_api.entity.PostEntity;
 import com.upfront.upfront_api.mapper.NotificationMapper;
 import com.upfront.upfront_api.repository.NotificationRepository;
 import com.upfront.upfront_api.utils.SecurityUtils;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -92,5 +94,13 @@ public class NotificationService {
 
     public NotificationDto save(NotificationEntity notificationEntity) {
         return NotificationMapper.toResponse(this.notificationRepository.save(notificationEntity));
+    }
+
+    public void markRead(Long id) {
+        NotificationEntity entity = notificationRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Notification not found"));
+        entity.setUnread(false);
+        this.notificationRepository.save(entity);
     }
 }

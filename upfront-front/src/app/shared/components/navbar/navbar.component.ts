@@ -60,7 +60,14 @@ export class NavbarComponent extends BaseComponent implements OnInit, OnDestroy 
   }
 
   readNotif(n: any) {
-    n.unread = false;
+    this.notificationService.getById(Apiconstants.READ, n.id).subscribe({
+      next: (response)=> {
+        n.unread = false;
+      },
+      error:(err) => {
+        console.log(err);
+      }
+    });
   }
 
   markAllRead() {

@@ -8,7 +8,7 @@ import {environment} from "../../../../environments/environment";
 })
 export class BaseService {
 
-  constructor(private http: HttpClient) {
+  constructor(protected http: HttpClient) {
   }
 
   postRequest(model: any, url: string) {

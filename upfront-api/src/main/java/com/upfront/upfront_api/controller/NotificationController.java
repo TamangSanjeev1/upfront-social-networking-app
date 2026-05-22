@@ -2,13 +2,12 @@ package com.upfront.upfront_api.controller;
 
 import com.upfront.upfront_api.dto.NotificationDto;
 import com.upfront.upfront_api.dto.response.PagedResponse;
+import com.upfront.upfront_api.exception.ResourceNotFoundException;
 import com.upfront.upfront_api.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +28,14 @@ public class NotificationController {
     @GetMapping
     public ResponseEntity<List<NotificationDto>> getNotification() {
         return ResponseEntity.ok(notificationService.getNotifications());
+    }
+
+    @GetMapping("/read")
+    public HttpStatus getNotification(@RequestParam(value = "id") Long id) {
+        if (id == null) {
+            throw new ResourceNotFoundException("Not found {}", id.toString());
+        }
+        notificationService.markRead(id);
+        return HttpStatus.OK;
     }
 }
