@@ -17,19 +17,19 @@ export class BaseComponent {
     constructor(protected authService: AuthService) {
     }
 
-    get firstName(): string {
-        const first = this.user()?.name?.split(' ')[0] || '';
+    firstName(name: string): string {
+        const first = name?.split(' ')[0] || '';
         return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
     }
 
-    get fullName(): string {
-        const first = this.user()?.name?.split(' ')[0] || '';
-        const second = this.user()?.name?.split(' ')[1] || '';
+    fullName(name: string): string {
+        const first = name?.split(' ')[0] || '';
+        const second = name?.split(' ')[1] || '';
         return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() +　' '  + second.charAt(0).toUpperCase() + second.slice(1).toLowerCase();
     }
 
-    get initials(): string {
-        const name = this.user()?.name || '';
+    initials(inputName: string): string {
+        const name = inputName || '';
         return name
             .split(' ')
             .map(part => part.charAt(0))

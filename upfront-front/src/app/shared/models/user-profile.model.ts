@@ -82,7 +82,7 @@ export interface NotificationModel {
     iconBg: string;
     title: string;
     body: string;
-    time: string;
+    timestamp: string;
 }
 
 export interface PagedResponse<T> {

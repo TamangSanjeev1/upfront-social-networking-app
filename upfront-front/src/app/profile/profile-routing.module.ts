@@ -7,6 +7,11 @@ const routes: Routes = [
     path: '',
     loadComponent: () => import('./user-profile/user-profile.component').then(m => m.UserProfileComponent),
     canActivate: [authGuard]
+  },
+  {
+    path: ':id',
+    loadComponent: () => import('./user-profile/user-profile.component').then(m => m.UserProfileComponent),
+    canActivate: [authGuard]
   }
 ];
 

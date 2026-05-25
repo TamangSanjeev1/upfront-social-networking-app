@@ -1,6 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {AVATARS} from '../../core/mock-data';
 import {Utils} from "../../shared/utils/utils";
+import {map} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-post-card',
@@ -10,6 +12,9 @@ import {Utils} from "../../shared/utils/utils";
 export class PostCardComponent {
   @Input() post: any;
   expandedPosts: { [key: number]: boolean } = {};
+
+  constructor(private router: Router) {
+  }
 
   togglePost(postId: number) {
     this.expandedPosts[postId] = !this.expandedPosts[postId];
@@ -59,6 +64,10 @@ export class PostCardComponent {
         this.post.isUpvoted = true; 
       }
     }
+  }
+
+  viewProfile(id: any) {
+    this.router.navigate(['/profile', id]);
   }
 
   protected readonly Utils = Utils;

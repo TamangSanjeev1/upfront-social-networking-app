@@ -14,6 +14,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {Apiconstants} from "../../shared/apiconstants";
 import console from "node:console";
 import {PaginationService} from "../../shared/services/services/pagination.service";
+import {Utils} from "../../shared/utils/utils";
 
 @Component({
   selector: 'app-view-notification',
@@ -77,4 +78,6 @@ export class ViewNotificationComponent {
         console.log(err);
       }
     });  }
+
+    protected readonly Utils = Utils;
 }

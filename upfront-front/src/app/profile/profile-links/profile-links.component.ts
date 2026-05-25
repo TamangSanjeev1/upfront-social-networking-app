@@ -3,6 +3,8 @@ import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {ProfileService} from "../../shared/services/profile.service";
 import {BaseComponent} from "../../core/components/base.component";
 import {AuthService} from "../../core/services/auth.service";
+import {UserService} from "../../shared/services/services/user.service";
+import {UserProfileBaseComponent} from "../base-files/user-profile-base.component";
 
 interface LinkConfig {
   key: keyof import('../../shared/models/user-profile.model').SocialLinks;
@@ -39,7 +41,7 @@ interface LinkConfig {
               </span>
               <span class="link-info">
                 <span class="link-label">{{ link.label }}</span>
-                <span class="link-url">{{ formatUrl(user()!.socialLinks[link.key]!) }}</span>
+                <span class="link-url">{{ viewUserInfo ? formatUrl(viewUserInfo.socialLinks[link.key]!) : formatUrl(user()!.socialLinks[link.key]!) }}</span>
               </span>
               <mat-icon class="link-ext">open_in_new</mat-icon>
             </a>
@@ -147,11 +149,11 @@ interface LinkConfig {
     }
   `],
 })
-export class ProfileLinksComponent extends BaseComponent{
+export class ProfileLinksComponent extends UserProfileBaseComponent {
   protected ps = inject(ProfileService);
 
-  constructor(authService: AuthService) {
-    super(authService);
+  constructor(authService: AuthService, userService: UserService) {
+    super(authService, userService);
   }
 
   readonly linkConfigs: LinkConfig[] = [
