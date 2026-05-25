@@ -18,7 +18,7 @@ import {UserService} from "../../shared/services/services/user.service";
       </div>
       <div class="bio-body">
         <p class="bio-text" [class.collapsed]="!expanded()">
-          {{ user()!.bio ? user()!.bio : "No bio yet" }}
+          {{ viewUserInfo ? viewUserInfo.bio : (user()!.bio ? user()!.bio : "No bio yet") }}
         </p>
         @if (isTruncatable()) {
           <button class="expand-btn" (click)="toggleExpanded()">
@@ -96,7 +96,7 @@ export class ProfileBioComponent extends UserProfileBaseComponent {
   }
 
   isTruncatable(): boolean {
-    return this.user()!.bio ? this.user()!.bio.length > 200 : false;
+    return this.viewUserInfo ? this.viewUserInfo!.bio.length > 200 : (this.user()!.bio ? this.user()!.bio.length > 200 : false);
   }
 
   toggleExpanded() {

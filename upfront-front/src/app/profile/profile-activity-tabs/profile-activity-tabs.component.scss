@@ -269,3 +269,15 @@
     color: var(--text-primary);
   }
 }
+
+.post-body.expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+.see-more {
+  font-size: 15px;
+  text-decoration: underline;
+  color: #0a66c2;
+}

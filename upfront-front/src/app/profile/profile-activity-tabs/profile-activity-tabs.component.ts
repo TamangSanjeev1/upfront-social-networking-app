@@ -1,52 +1,70 @@
 // profile-activity-tabs.component.ts
-import {
-  Component, inject, signal, computed, ChangeDetectionStrategy,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatButtonModule } from '@angular/material/button';
-import {ProfileService} from "../../shared/services/profile.service";
-import {ActivityPost} from "../../shared/models/user-profile.model";
+import {Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild,} from '@angular/core';
+import {Post} from "../../shared/models/user-profile.model";
+import {UserProfileBaseComponent} from "../base-files/user-profile-base.component";
+import {Apiconstants} from "../../shared/apiconstants";
+import {takeUntil} from "rxjs";
+import {PaginationService} from "../../shared/services/services/pagination.service";
+import {Utils} from "../../shared/utils/utils";
+import {AuthService} from "../../core/services/auth.service";
+import {UserService} from "../../shared/services/services/user.service";
 
-type TabType = 'post' | 'comment' | 'review' | 'saved';
+type TabType = 'post' | 'review' | 'comment' | 'saved';
 
 interface Tab {
   type: TabType | 'all';
   label: string;
   icon: string;
+  count: number;
 }
 
 @Component({
   selector: 'app-profile-activity-tabs',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatTabsModule, MatIconModule, MatChipsModule, MatButtonModule],
   templateUrl: './profile-activity-tabs.component.html',
   styleUrls: ['./profile-activity-tabs.component.scss'],
 })
-export class ProfileActivityTabsComponent {
-  protected ps = inject(ProfileService);
+export class ProfileActivityTabsComponent extends UserProfileBaseComponent implements OnInit, OnDestroy {
   protected activeTab = signal<TabType | 'all'>('all');
+  @ViewChild('scrollAnchor') scrollAnchor!: ElementRef;
+  posts = signal<Post[]>([]);
+  activeFilter = 'all';
+  expandedPosts: { [key: string]: boolean } = {};
 
   readonly tabs: Tab[] = [
-    { type: 'all', label: 'All', icon: 'view_list' },
-    { type: 'post', label: 'Posts', icon: 'article' },
-    { type: 'comment', label: 'Comments', icon: 'chat_bubble_outline' },
-    { type: 'review', label: 'Reviews', icon: 'rate_review' },
-    { type: 'saved', label: 'Saved', icon: 'bookmark_border' },
+    { type: 'all', label: 'All', icon: 'view_list', count: 0 },
+    { type: 'post', label: 'Posts', icon: 'article', count: 0 },
+    { type: 'review', label: 'Reviews', icon: 'rate_review', count: 0 },
+    { type: 'comment', label: 'Comments', icon: 'chat_bubble_outline', count: 0 },
+    { type: 'saved', label: 'Saved', icon: 'bookmark_border', count: 0 },
   ];
 
-  readonly filteredActivity = computed<ActivityPost[]>(() => {
-    const tab = this.activeTab();
-    const all = this.ps.profile().activity;
-    return tab === 'all' ? all : all.filter(a => a.type === tab);
-  });
+  constructor(authService: AuthService, userService: UserService, private postService: PaginationService) {
+    super(authService, userService);
+  }
 
-  tabCount(type: TabType | 'all'): number {
-    const all = this.ps.profile().activity;
-    return type === 'all' ? all.length : all.filter(a => a.type === type).length;
+  ngOnInit() {
+    this.fetchPosts();
+  }
+
+  updateTabCounts(): void {
+    this.tabs.forEach(tab => {
+      tab.count =
+          tab.type === 'all'
+              ? this.posts().length
+              : this.posts().filter(post => post.type === tab.type).length;
+    });
+  }
+
+  onTabChange(tab: any) {
+    this.activeTab.set(tab.type);
+    if (this.activeFilter != tab.type) {
+      this.posts.set([]);
+      this.page = 0;
+      this.size = 10;
+      this.hasMore = true;
+    }
+    this.activeFilter = tab.type;
+    this.fetchPosts();
   }
 
   typeConfig(type: string): { color: string; bg: string; icon: string; label: string } {
@@ -59,7 +77,67 @@ export class ProfileActivityTabsComponent {
     return configs[type] || configs['post'];
   }
 
-  formatUpvotes(n: number): string {
-    return n >= 1000 ? `${(n / 1000).toFixed(1)}k` : n.toString();
+  ngAfterViewInit(): void {
+    this.setupIntersectionObserver();
   }
+
+  override ngOnDestroy(): void {
+    super.destroy();
+  }
+
+  fetchPosts() {
+    if (this.isLoading || !this.hasMore) return;
+    this.isLoading = true;
+    this.error = null;
+    const request$ = this.activeFilter != "all"
+        ? this.postService.getPostsByTag(this.activeFilter, this.page, this.size, this.viewUserInfo ? this.viewUserInfo!.id : this.user()!.id)
+        : this.postService.getByPagination(this.page, this.size, Apiconstants.POST, this.viewUserInfo ? this.viewUserInfo!.id : this.user()!.id);
+
+    request$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (response) => {
+        this.posts.update(posts => [
+          ...posts,
+          ...response.content
+        ]);
+        this.updateTabCounts();
+        this.hasMore = !response.last;
+        this.page++;
+        this.isLoading = false;
+        this.isInitialLoad = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load posts!';
+        this.isLoading = false;
+        this.isInitialLoad = false;
+        console.error(err);
+      }
+    });
+  }
+
+  setupIntersectionObserver(): void {
+    this.observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting && !this.isLoading && this.hasMore) {
+            this.ngZone.run(() => this.fetchPosts());
+          }
+        },
+        { threshold: 0.1, rootMargin: '200px' }
+    );
+    if (this.scrollAnchor) {
+      this.observer.observe(this.scrollAnchor.nativeElement);
+    }
+  }
+
+  sentimentColor(post: Post) {
+    const s = post.sentiment;
+    const map: any = { positive: '#10b981', negative: '#ef4444', mixed: '#f59e0b', neutral: '#64748b' };
+    return map[s] || '#64748b';
+  }
+
+  togglePost(postId: number) {
+    this.expandedPosts[postId] = !this.expandedPosts[postId];
+  }
+
+  protected readonly Utils = Utils;
 }

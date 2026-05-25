@@ -10,6 +10,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {ProfileLinksComponent} from "./profile-links/profile-links.component";
 import {ProfileBioComponent} from "./profile-bio/profile-bio.component";
 import {ProfileStatsComponent} from "./profile-stats/profile-stats.component";
+import {ProfileActivityTabsComponent} from "./profile-activity-tabs/profile-activity-tabs.component";
 
 
 @NgModule({
@@ -17,13 +18,15 @@ import {ProfileStatsComponent} from "./profile-stats/profile-stats.component";
     ProfileHeaderComponent,
     ProfileLinksComponent,
     ProfileBioComponent,
-      ProfileStatsComponent
+    ProfileStatsComponent,
+    ProfileActivityTabsComponent
   ],
   exports: [
     ProfileHeaderComponent,
     ProfileLinksComponent,
     ProfileBioComponent,
-    ProfileStatsComponent
+    ProfileStatsComponent,
+    ProfileActivityTabsComponent
   ],
   imports: [
     CommonModule,

@@ -20,7 +20,7 @@
         </a>
       <div style="display:flex;align-items:center;gap:6px;">
         <span style="font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;" [style.background]="typeInfo.bg" [style.color]="typeInfo.color">{{typeInfo.label}}</span>
-        <span *ngIf="post.rating" class="stars" style="font-size:12px;">{{stars}}</span>
+        <span *ngIf="post.rating" class="stars" style="font-size:12px;">{{Utils.calculateStars(post.rating)}}</span>
         <span *ngIf="post.rating" style="font-size:12px;font-weight:600;" [style.color]="sentimentColor">{{post.rating}}</span>
         <span *ngIf="post.salary" class="salary-chip">{{post.salary}}</span>
         <span *ngIf="post.sentiment" style="font-size:11px;padding:2px 6px;border-radius:4px;text-transform:capitalize;" 
@@ -58,14 +58,14 @@
   <div style="display:flex;align-items:center;gap:4px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.05);">
     <button class="vote-btn" [class.upvoted]="post.isUpvoted" (click)="toggleVote(true)">
       <svg width="15" height="15" viewBox="0 0 15 15" [attr.fill]="post.isUpvoted ? 'currentColor' : 'none'"><path d="M7.5 2L13 8H10V13H5V8H2L7.5 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      <span>{{formatNum(post.upvotes)}}</span>
+      <span>{{Utils.formatNum(post.upvotes)}}</span>
     </button>
     <button class="vote-btn" (click)="toggleVote(false)">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 13L2 7H5V2H10V7H13L7.5 13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
     </button>
     <button class="action-btn">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 2H13C13.6 2 14 2.4 14 3V10C14 10.6 13.6 11 13 11H5L2 14V3C2 2.4 2.4 2 2 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      {{formatNum(post.comments)}}
+      {{Utils.formatNum(post.comments)}}
     </button>
     <button class="action-btn">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L6 4V6C10 6 13 8 13 12C11 10 9 9 6 9V11L2 7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>

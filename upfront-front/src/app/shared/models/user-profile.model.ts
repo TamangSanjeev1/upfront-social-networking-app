@@ -56,7 +56,7 @@ export interface UserProfile {
 }
 
 export interface Post {
-  id: string;
+  id: number;
   type: string;
   author: string;
   timeAgo: string;
@@ -70,6 +70,7 @@ export interface Post {
   upvotes: number;
   comments: number;
   isUpvoted: boolean;
+  createdAt: string;
   isVerified: boolean;
   sentiment: string;
 }

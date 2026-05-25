@@ -17,15 +17,18 @@ import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 
 @NgModule({
-  declarations: [
-      LandingComponent,
-      CreatePostCardComponent,
-      CreatePostModalComponent,
-      PostCardComponent,
-      PostFeedComponent,
-      RightSidebarComponent,
-      SidebarComponent
-  ],
+    declarations: [
+        LandingComponent,
+        CreatePostCardComponent,
+        CreatePostModalComponent,
+        PostCardComponent,
+        PostFeedComponent,
+        RightSidebarComponent,
+        SidebarComponent
+    ],
+    exports: [
+        PostCardComponent
+    ],
     imports: [
         CommonModule,
         DashboardRoutingModule,

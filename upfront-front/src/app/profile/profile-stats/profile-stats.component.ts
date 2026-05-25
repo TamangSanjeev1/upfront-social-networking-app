@@ -3,6 +3,7 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {ProfileService} from "../../shared/services/profile.service";
+import {UserProfileBaseComponent} from "../base-files/user-profile-base.component";
 
 interface StatItem {
   label: string;
@@ -139,7 +140,7 @@ interface StatItem {
     }
   `],
 })
-export class ProfileStatsComponent {
+export class ProfileStatsComponent extends UserProfileBaseComponent {
   protected ps = inject(ProfileService);
 
   readonly statItems: StatItem[] = [
@@ -147,18 +148,30 @@ export class ProfileStatsComponent {
     { key: 'comments', label: 'Comments', icon: 'chat_bubble_outline', color: '#06b6d4', gradient: 'rgba(6,182,212,0.1)' },
     { key: 'reviews', label: 'Code Reviews', icon: 'rate_review', color: '#10b981', gradient: 'rgba(16,185,129,0.1)' },
     { key: 'saved', label: 'Saved', icon: 'bookmark_border', color: '#f59e0b', gradient: 'rgba(245,158,11,0.1)' },
-    { key: 'solutions', label: 'Solutions', icon: 'check_circle_outline', color: '#8b5cf6', gradient: 'rgba(139,92,246,0.1)' },
     { key: 'upvotes', label: 'Upvotes Received', icon: 'thumb_up_alt', color: '#ef4444', gradient: 'rgba(239,68,68,0.1)' },
   ];
 
   getStatValue(key: string): number {
-    const s = (this.ps.profile()?.stats ?? {}) as unknown as Record<string, number>;
-    return s[key] ?? 0;
+    switch (key) {
+      case 'posts':
+        return this.viewUserInfo ? (this.viewUserInfo?.postCount ? this.viewUserInfo?.postCount : 0) : (this.user()!.postCount ? this.user()!.postCount : 0);
+      case 'reviews':
+        return this.viewUserInfo ? (this.viewUserInfo?.reviewCount ? this.viewUserInfo?.reviewCount : 0) : (this.user()!.reviewCount ? this.user()!.reviewCount : 0);
+      case 'comments':
+        return this.viewUserInfo ? (this.viewUserInfo?.commentCount? this.viewUserInfo?.commentCount : 0) : (this.user()!.commentCount ? this.user()!.commentCount : 0);
+      case 'saved':
+        return this.viewUserInfo ? (this.viewUserInfo?.savedCount ? this.viewUserInfo?.savedCount : 0) : (this.user()!.savedCount ? this.user()!.savedCount : 0);
+      case 'upvotes':
+        return this.viewUserInfo ? (this.viewUserInfo?.likes ? this.viewUserInfo?.likes : 0) : (this.user()!.likes ? this.user()!.likes : 0);
+      default:
+        return 0;
+    }
   }
 
   getBarPercent(key: string): number {
+    if (!key) return 0;
     const max: Record<string, number> = {
-      posts: 1000, comments: 5000, reviews: 200, saved: 1000, solutions: 200, upvotes: 50000,
+      posts: 1000, comments: 5000, reviews: 200, saved: 1000, upvotes: 50000,
     };
     return Math.min(100, (this.getStatValue(key) / (max[key] || 100)) * 100);
   }
