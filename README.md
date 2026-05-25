@@ -1,6 +1,5 @@
-# Angular 17 + Spring Boot 3 Boilerplate
-
-Full-stack monolithic application with Google OAuth2, JWT, MSSQL, and real-time WebSocket notifications.
+# Project Description
+A prototype social networking app with full-stack monolithic architecture with Google OAuth2, JWT, MSSQL, and real-time WebSocket notifications.
 
 ---
 
