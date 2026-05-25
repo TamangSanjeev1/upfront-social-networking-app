@@ -12,5 +12,17 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> findAllByOrderByCreatedAtDesc();
     Page<PostEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    Page<PostEntity> findByUser_IdOrderByCreatedAtDesc(
+            Long userId,
+            Pageable pageable
+    );
+
     Page<PostEntity> findByTypeOrderByCreatedAtDesc(String type, Pageable pageable);
+
+    Page<PostEntity> findByTypeAndUser_IdOrderByCreatedAtDesc(
+            String tag,
+            Long userId,
+            Pageable pageable
+    );
 }

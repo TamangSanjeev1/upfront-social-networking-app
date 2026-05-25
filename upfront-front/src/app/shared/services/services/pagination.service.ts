@@ -15,17 +15,25 @@ export class PaginationService extends BaseService {
     super(http);
   }
 
-  getByPagination(page: number, size: number = 10, url: string): Observable<PagedResponse<any>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+  getByPagination(page: number, size: number = 10, url: string, user: any = null): Observable<PagedResponse<any>> {
+    let params = new HttpParams()
+        .set('page', page.toString())
+        .set('size', size.toString());
+
+    if (user != null) {
+      params = params.set('user', user);
+    }
     return this.http.get<PagedResponse<any>>(environment.apiUrl + url + Apiconstants.PAGINATION, { params });
   }
 
-  getPostsByTag(tag: string, page: number, size: number = 10): Observable<PagedResponse<Post>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+  getPostsByTag(tag: string, page: number, size: number = 10, user: any = null): Observable<PagedResponse<Post>> {
+    let params = new HttpParams()
+        .set('page', page.toString())
+        .set('size', size.toString());
+
+    if (user != null) {
+      params = params.set('user', user);
+    }
     return this.http.get<PagedResponse<Post>>(environment.apiUrl + Apiconstants.POST + Apiconstants.TAG + `${tag}`, { params });
   }
 }

@@ -32,6 +32,7 @@ public class UserMapper {
 
     public static UserDto toResponse(User entity, boolean hideInfo) {
         return UserDto.builder()
+                .id(entity.getId())
                 .name(entity.getName())
                 .email(entity.getEmail())
                 .profileImage(entity.getProfileImage() != null ? entity.getProfileImage() : "")

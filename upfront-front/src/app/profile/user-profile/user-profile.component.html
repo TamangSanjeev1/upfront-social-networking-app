@@ -47,13 +47,13 @@
                     <aside class="profile-sidebar">
                         <app-profile-bio [viewUserInfo]="viewUser()" />
                         <app-profile-links [viewUserInfo]="viewUser()" />
-                        <app-profile-stats />
-                        <app-profile-skills />
+                        <app-profile-stats [viewUserInfo]="viewUser()"/>
+<!--                        <app-profile-skills />-->
                     </aside>
 
                     <!-- Main Feed -->
                     <section class="profile-main">
-                        <app-profile-activity-tabs />
+                        <app-profile-activity-tabs [viewUserInfo]="viewUser()" />
                     </section>
                 </div>
             </div>

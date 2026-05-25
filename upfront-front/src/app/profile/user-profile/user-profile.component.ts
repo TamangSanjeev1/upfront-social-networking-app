@@ -15,7 +15,6 @@ import {UserProfileBaseComponent} from "../base-files/user-profile-base.componen
   standalone: true,
   imports: [
     ProfileSkillsComponent,
-    ProfileActivityTabsComponent,
     NavbarComponent,
     ProfileModule,
     DashboardModule

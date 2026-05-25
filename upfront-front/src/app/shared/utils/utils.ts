@@ -41,4 +41,17 @@ export class Utils {
 
         return `${days} days ago`;
     }
+
+    static calculateStars(ratingInp: any) {
+        if (!ratingInp) return '';
+        const rating = ratingInp;
+        const full = Math.floor(rating);
+        const half = rating % 1 >= 0.5 ? 1 : 0;
+        return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(5 - full - half);
+    }
+
+    static formatNum(n: number) {
+        if (n >= 1000) return (n/1000).toFixed(1) + 'K';
+        return n.toString();
+    }
 }

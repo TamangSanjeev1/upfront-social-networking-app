@@ -150,7 +150,6 @@ interface LinkConfig {
   `],
 })
 export class ProfileLinksComponent extends UserProfileBaseComponent {
-  protected ps = inject(ProfileService);
 
   constructor(authService: AuthService, userService: UserService) {
     super(authService, userService);
@@ -165,10 +164,10 @@ export class ProfileLinksComponent extends UserProfileBaseComponent {
   ];
 
   visibleLinks() {
-    if (!this.user()!.socialLinks) {
+    if (!this.viewUserInfo && !this.user()!.socialLinks) {
       return;
     }
-    const links = this.user()!.socialLinks;
+    const links = this.viewUserInfo ? this.viewUserInfo.socialLinks : this.user()!.socialLinks;
     return this.linkConfigs.filter(c => links[c.key]);
   }
 

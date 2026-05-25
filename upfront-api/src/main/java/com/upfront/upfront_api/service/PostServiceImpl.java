@@ -55,9 +55,22 @@ public class PostServiceImpl {
         return toPagedResponse(result, page, size);
     }
 
+    public PagedResponse<PostDto> getPostsByUser(int page, int size, Long userId) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PostEntity> result = postRepository.findByUser_IdOrderByCreatedAtDesc(userId, pageable);
+        return toPagedResponse(result, page, size);
+    }
+
+
     public PagedResponse<PostDto> getPostsByTag(String tag, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<PostEntity> result = postRepository.findByTypeOrderByCreatedAtDesc(tag, pageable);
+        return toPagedResponse(result, page, size);
+    }
+
+    public PagedResponse<PostDto> getPostsByTagAndUser(Long userId, String tag, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PostEntity> result = postRepository.findByTypeAndUser_IdOrderByCreatedAtDesc(tag, userId, pageable);
         return toPagedResponse(result, page, size);
     }
 

@@ -1,6 +1,5 @@
 package com.upfront.upfront_api.controller;
 
-import com.upfront.upfront_api.dto.NotificationDto;
 import com.upfront.upfront_api.dto.PostDto;
 import com.upfront.upfront_api.dto.response.PagedResponse;
 import com.upfront.upfront_api.entity.NotificationEntity;
@@ -69,15 +68,15 @@ public class PostController {
     @GetMapping("/pagination")
     public ResponseEntity<PagedResponse<PostDto>> getPosts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(postService.getPosts(page, size));
+            @RequestParam(defaultValue = "10") int size, @RequestParam(value = "user", required = false) Long user) {
+        return ResponseEntity.ok(user != null ? postService.getPostsByUser(page, size, user) : postService.getPosts(page, size));
     }
 
     @GetMapping("/tag/{tag}")
     public ResponseEntity<PagedResponse<PostDto>> getPostsByTag(
             @PathVariable String tag,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(postService.getPostsByTag(tag, page, size));
+            @RequestParam(defaultValue = "10") int size, @RequestParam(value = "user", required = false) Long user) {
+        return ResponseEntity.ok(user != null ? postService.getPostsByTagAndUser(user, tag, page, size): postService.getPostsByTag(tag, page, size));
     }
 }

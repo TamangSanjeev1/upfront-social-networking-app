@@ -1,7 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {AVATARS} from '../../core/mock-data';
 import {Utils} from "../../shared/utils/utils";
-import {map} from "rxjs";
 import {Router} from "@angular/router";
 
 @Component({
@@ -20,10 +18,6 @@ export class PostCardComponent {
     this.expandedPosts[postId] = !this.expandedPosts[postId];
   }
 
-  get avatarBg() {
-    return AVATARS.colors[this.post.avatarColor];
-  }
-
   get typeInfo() {
     const types: any = {
       review: { label: 'Review', color: '#4460ed', bg: 'rgba(68,96,237,0.08)' },
@@ -39,19 +33,6 @@ export class PostCardComponent {
     const s = this.post.sentiment;
     const map: any = { positive: '#10b981', negative: '#ef4444', mixed: '#f59e0b', neutral: '#64748b' };
     return map[s] || '#64748b';
-  }
-
-  get stars() {
-    if (!this.post.rating) return '';
-    const rating = this.post.rating;
-    const full = Math.floor(rating);
-    const half = rating % 1 >= 0.5 ? 1 : 0;
-    return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(5 - full - half);
-  }
-
-  formatNum(n: number) {
-    if (n >= 1000) return (n/1000).toFixed(1) + 'K';
-    return n.toString();
   }
 
   toggleVote(isUp: boolean) {

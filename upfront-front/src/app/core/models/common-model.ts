@@ -59,6 +59,9 @@ export interface UserProfile {
   lastLogin: string;
   karma:number;
   postCount:number;
+  reviewCount:number;
+  commentCount:number;
+  savedCount:number;
   likes:number;
   postViews:number;
 }
