@@ -3,9 +3,10 @@ import {formatDate} from '@angular/common';
 import {MatDialog} from '@angular/material/dialog';
 import {ProfileService} from "../../shared/services/profile.service";
 import {EditProfileDialogComponent} from '../edit-profile-dialog/edit-profile-dialog.component';
-import {BaseComponent} from "../../core/components/base.component";
 import {AuthService} from "../../core/services/auth.service";
 import {Utils} from "../../shared/utils/utils";
+import {UserProfileBaseComponent} from "../base-files/user-profile-base.component";
+import {UserService} from "../../shared/services/services/user.service";
 
 @Component({
   selector: 'app-profile-header',
@@ -13,12 +14,12 @@ import {Utils} from "../../shared/utils/utils";
   templateUrl: './profile-header.component.html',
   styleUrls: ['./profile-header.component.scss'],
 })
-export class ProfileHeaderComponent extends BaseComponent implements OnInit {
+export class ProfileHeaderComponent extends UserProfileBaseComponent implements OnInit {
   protected ps = inject(ProfileService);
   private dialog = inject(MatDialog);
 
-  constructor(authService: AuthService) {
-    super(authService);
+  constructor(authService: AuthService, userService: UserService) {
+    super(authService, userService);
   }
 
   protected coverLoaded = signal(false);
@@ -47,6 +48,7 @@ export class ProfileHeaderComponent extends BaseComponent implements OnInit {
   }
 
   formatNumber(n: number): string {
+    if (!n) return "0";
     if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
     if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
     return n.toString();

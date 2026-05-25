@@ -65,7 +65,7 @@
             <div style="flex:1;min-width:0;">
               <div [style.fontWeight]="n.unread ? '600' : '500'" style="font-size:13px;margin-bottom:2px;" class="post-body">{{n.title}}</div>
               <div style="font-size:12px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{n.body}}</div>
-              <div style="font-size:11px;color:#cbd0e0;margin-top:4px;">{{n.time}}</div>
+              <div style="font-size:11px;color:#cbd0e0;margin-top:4px;">{{Utils.timeAgo(n.timestamp)}}</div>
             </div>
             <div *ngIf="n.unread" style="width:8px;height:8px;border-radius:50%;background:var(--brand);flex-shrink:0;margin-top:4px;"></div>
           </div>
@@ -79,8 +79,8 @@
     <!-- Profile -->
     <div style="position:relative;">
       <button class="profile-btn" (click)="toggleProfile()">
-        <span style="font-size:13px;font-weight:600;color:#64748b;">Hey, {{firstName}}</span>
-        <div class="avatar" style="background:linear-gradient(135deg,#4460ed,#a78bfa);width:32px;height:32px;font-size:12px;">{{initials}}</div>
+        <span style="font-size:13px;font-weight:600;color:#64748b;">Hey, {{ firstName(user()!.name) }}</span>
+        <div class="avatar" style="background:linear-gradient(135deg,#4460ed,#a78bfa);width:32px;height:32px;font-size:12px;">{{initials(user()!.name)}}</div>
       </button>
 
       <!-- Profile Dropdown -->

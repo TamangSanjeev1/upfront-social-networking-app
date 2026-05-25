@@ -54,7 +54,7 @@
 
             <ng-container matColumnDef="createdDate">
                 <th mat-header-cell *matHeaderCellDef>Created Date</th>
-                <td mat-cell *matCellDef="let row" class="muted">{{ row.timestamp }}</td>
+                <td mat-cell *matCellDef="let row" class="muted">{{ Utils.timeAgo(row.timestamp) }}</td>
             </ng-container>
 
             <!-- Actions Column -->

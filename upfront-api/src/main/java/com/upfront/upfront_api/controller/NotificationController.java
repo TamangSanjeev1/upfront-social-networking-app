@@ -33,7 +33,7 @@ public class NotificationController {
     @GetMapping("/read")
     public HttpStatus getNotification(@RequestParam(value = "id") Long id) {
         if (id == null) {
-            throw new ResourceNotFoundException("Not found {}", id.toString());
+            throw new ResourceNotFoundException("Not found", "");
         }
         notificationService.markRead(id);
         return HttpStatus.OK;

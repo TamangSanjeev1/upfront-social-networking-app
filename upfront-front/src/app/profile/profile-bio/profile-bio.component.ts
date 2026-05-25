@@ -2,6 +2,8 @@
 import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {BaseComponent} from "../../core/components/base.component";
 import {AuthService} from "../../core/services/auth.service";
+import {UserProfileBaseComponent} from "../base-files/user-profile-base.component";
+import {UserService} from "../../shared/services/services/user.service";
 
 @Component({
   selector: 'app-profile-bio',
@@ -86,11 +88,11 @@ import {AuthService} from "../../core/services/auth.service";
     }
   `],
 })
-export class ProfileBioComponent extends BaseComponent {
+export class ProfileBioComponent extends UserProfileBaseComponent {
   protected expanded = signal(false);
 
-  constructor(authService: AuthService) {
-    super(authService);
+  constructor(authService: AuthService, userService: UserService) {
+    super(authService, userService);
   }
 
   isTruncatable(): boolean {

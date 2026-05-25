@@ -53,6 +53,11 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found: " + email));
     }
 
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found: " + id));
+    }
+
     public User updateUserDetails(String email, UserDto user) {
         return userRepository.findByEmail(email)
                 .map(existingUser -> {

@@ -38,15 +38,15 @@
             <div class="profile-page">
                 <!-- Profile Header (full width) -->
                 <div class="section-full">
-                    <app-profile-header />
+                    <app-profile-header [viewUserInfo]="viewUser()" />
                 </div>
 
                 <!-- Two-column layout -->
                 <div class="profile-columns">
                     <!-- Left Sidebar -->
                     <aside class="profile-sidebar">
-                        <app-profile-bio />
-                        <app-profile-links />
+                        <app-profile-bio [viewUserInfo]="viewUser()" />
+                        <app-profile-links [viewUserInfo]="viewUser()" />
                         <app-profile-stats />
                         <app-profile-skills />
                     </aside>

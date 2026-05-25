@@ -17,9 +17,9 @@
         <div class="avatar-skeleton" [class.hidden]="user()"></div>
         <img
           class="avatar"
-          [class.loaded]="user()"
-          [src]="user()!.profileImage || 'https://ui-avatars.com/api/?name=' + user()!.name + '&size=120'"
-          [alt]="user()!.name"
+          [class.loaded]="user() || viewUserInfo"
+          [src]="viewUserInfo ? viewUserInfo.profileImage || 'https://ui-avatars.com/api/?name=' + viewUserInfo.name + '&size=120' : user()!.profileImage || 'https://ui-avatars.com/api/?name=' + user()!.name + '&size=120'"
+          [alt]="viewUserInfo ? viewUserInfo.name : user()!.name"
         />
         <span *ngIf="ps.profile().isVerified" class="verified-badge" matTooltip="Verified">
           <mat-icon>verified</mat-icon>
@@ -42,7 +42,7 @@
           <mat-icon>mail_outline</mat-icon>
           Message
         </button>
-        <button mat-icon-button class="btn-edit" (click)="openEditDialog()" matTooltip="Edit Profile">
+        <button mat-icon-button class="btn-edit" *ngIf="!viewUserInfo" (click)="openEditDialog()" matTooltip="Edit Profile">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button class="btn-more" matTooltip="More options">
@@ -54,45 +54,45 @@
     <!-- Identity -->
     <div class="identity">
       <div class="name-row">
-        <h1 class="display-name">{{ fullName }}</h1>
+        <h1 class="display-name">{{ viewUserInfo ? fullName(viewUserInfo.name) : fullName(user()!.name) }}</h1>
         <span class="reputation-badge" matTooltip="Reputation score">
           <mat-icon class="rep-icon">workspace_premium</mat-icon>
           {{ ps.reputationFormatted() }}
         </span>
       </div>
-      <p class="username">{{ user()!.email }}</p>
-      <p class="title">{{ user()!.title }}</p>
+      <p class="username">{{ viewUserInfo ? viewUserInfo.email : user()!.email }}</p>
+      <p class="title">{{ viewUserInfo ? viewUserInfo.title : user()!.title }}</p>
 
       <!-- Meta info -->
       <div class="meta-row">
-        <span class="meta-item" *ngIf="user()!.location">
+        <span class="meta-item" *ngIf="viewUserInfo ? viewUserInfo.location : user()!.location">
           <mat-icon>location_on</mat-icon>
-          {{ user()!.location  }}
+          {{ viewUserInfo ? viewUserInfo.location : user()!.location  }}
         </span>
-        <span class="meta-item" *ngIf="user()!.company">
+        <span class="meta-item" *ngIf="viewUserInfo ? viewUserInfo.company : user()!.company">
           <mat-icon>business</mat-icon>
-          {{ user()!.company }}
+          {{ viewUserInfo ? viewUserInfo.company : user()!.company }}
         </span>
         <span class="meta-item">
           <mat-icon>calendar_today</mat-icon>
-          Joined {{ Utils.formatDate(user()!.createdAt) }}
+          Joined {{ viewUserInfo ? Utils.formatDate(viewUserInfo.createdAt) : Utils.formatDate(user()!.createdAt) }}
         </span>
       </div>
 
       <!-- Followers/Following -->
       <div class="social-counts">
         <button class="count-item">
-          <span class="count-value">{{ user()!.followers ? formatNumber(user()!.followers) : 0 }}</span>
+          <span class="count-value">{{ viewUserInfo ? formatNumber(viewUserInfo.followers) : user()!.followers ? formatNumber(user()!.followers) : 0 }}</span>
           <span class="count-label">Followers</span>
         </button>
         <span class="count-divider">·</span>
         <button class="count-item">
-          <span class="count-value">{{ user()!.following ? formatNumber(user()!.following) : 0 }}</span>
+          <span class="count-value">{{ viewUserInfo ? formatNumber(viewUserInfo.following) : user()!.following ? formatNumber(user()!.following) : 0 }}</span>
           <span class="count-label">Following</span>
         </button>
         <span class="count-divider">·</span>
         <div class="count-item">
-          <span class="count-value">{{ user()!.likes ? formatNumber(user()!.likes) : 0 }}</span>
+          <span class="count-value">{{ viewUserInfo ? formatNumber(viewUserInfo.likes) :  user()!.likes ? formatNumber(user()!.likes) : 0 }}</span>
           <span class="count-label">Upvotes received</span>
         </div>
       </div>
