@@ -15,6 +15,7 @@ public class UserDto {
     private String googleId;
     private String name;
     private String email;
+    private String aliasName;
     private String profileImage;
     private LocalDateTime createdAt;
     private LocalDateTime lastLogin;

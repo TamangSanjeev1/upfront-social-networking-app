@@ -1,15 +1,15 @@
 package com.upfront.upfront_api.mapper;
 
-import com.upfront.upfront_api.dto.PostDto;
 import com.upfront.upfront_api.dto.UserDto;
-import com.upfront.upfront_api.entity.PostEntity;
 import com.upfront.upfront_api.entity.User;
+import com.upfront.upfront_api.utils.SecurityUtils;
 
 public class UserMapper {
 
     public static User toEntity(UserDto request) {
         return User.builder()
                 .name(request.getName())
+                .aliasName(SecurityUtils.randomUserNameGenerator())
                 .email(request.getEmail())
                 .profileImage(request.getProfileImage())
                 .title(request.getTitle())
@@ -34,7 +34,7 @@ public class UserMapper {
         return UserDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .email(entity.getEmail())
+                .aliasName(entity.getAliasName())
                 .profileImage(entity.getProfileImage() != null ? entity.getProfileImage() : "")
                 .createdAt(entity.getCreatedAt())
                 .lastLogin(hideInfo ? null : entity.getLastLogin())

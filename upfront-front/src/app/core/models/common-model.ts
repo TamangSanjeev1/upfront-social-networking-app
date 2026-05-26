@@ -64,4 +64,5 @@ export interface UserProfile {
   savedCount:number;
   likes:number;
   postViews:number;
+  aliasName: string;
 }

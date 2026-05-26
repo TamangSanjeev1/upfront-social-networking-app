@@ -1,5 +1,6 @@
 package com.upfront.upfront_api.utils;
 
+import com.github.javafaker.Faker;
 import com.upfront.upfront_api.security.jwt.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -64,5 +65,15 @@ public final class SecurityUtils {
         return authentication != null
                 && authentication.isAuthenticated()
                 && !"anonymousUser".equals(authentication.getPrincipal());
+    }
+
+    public static String randomUserNameGenerator() {
+        Faker faker = new Faker();
+        String username = "";
+        for (int i = 0; i < 10; i++) {
+            username = faker.name().username() + "_" + faker.number().digits(3);
+        }
+
+        return username;
     }
 }
