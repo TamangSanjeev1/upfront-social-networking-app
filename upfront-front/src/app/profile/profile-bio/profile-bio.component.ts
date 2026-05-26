@@ -96,7 +96,7 @@ export class ProfileBioComponent extends UserProfileBaseComponent {
   }
 
   isTruncatable(): boolean {
-    return this.viewUserInfo ? this.viewUserInfo!.bio.length > 200 : (this.user()!.bio ? this.user()!.bio.length > 200 : false);
+    return this.viewUserInfo && this.viewUserInfo.bio ? this.viewUserInfo!.bio.length > 200 : (this.user()!.bio ? this.user()!.bio.length > 200 : false);
   }
 
   toggleExpanded() {

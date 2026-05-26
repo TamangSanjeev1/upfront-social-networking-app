@@ -1,6 +1,5 @@
-import {Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {filter, Subject, Subscription, takeUntil} from "rxjs";
-import {BaseService} from "../../shared/services/base-service/base.service";
+import {Component, ElementRef, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
+import {Subscription, takeUntil} from "rxjs";
 import {Post} from "../../shared/models/user-profile.model";
 import {RefreshService} from "../../shared/services/services/refresh-service";
 import {PaginationService} from "../../shared/services/services/pagination.service";
@@ -14,13 +13,12 @@ import {AuthService} from "../../core/services/auth.service";
   styleUrl: './post-feed.component.css'
 })
 export class PostFeedComponent extends BaseComponent implements OnInit, OnDestroy {
-  posts: Post[] = [];
-  filteredPosts: Post[] = [];
+  posts = signal<Post[]>([]);
   activeFilter = 'hot';
   fadeOut = false;
   @ViewChild('scrollAnchor') scrollAnchor!: ElementRef;
   private subscription?: Subscription;
-  constructor(authService: AuthService, private apiService: BaseService, private refreshService: RefreshService, private postService: PaginationService) {
+  constructor(authService: AuthService, private refreshService: RefreshService, private postService: PaginationService) {
     super(authService);
   }
 
@@ -30,7 +28,10 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
     this.subscription =
         this.refreshService.refresh$
             .subscribe(() => {
-              this.fetchPosts();
+              this.page = 0;
+              this.size = 10;
+              this.hasMore = true;
+              this.fetchPosts(true);
             });
   }
 
@@ -42,7 +43,7 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
     super.destroy();
   }
 
-  fetchPosts() {
+  fetchPosts(fetchFromFirst: boolean = false) {
     if (this.isLoading || !this.hasMore) return;
     this.isLoading = true;
     this.error = null;
@@ -53,8 +54,14 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
 
     request$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
-        this.posts = [...this.posts, ...response.content];
-        this.filteredPosts = [...this.posts];
+        if (!fetchFromFirst) {
+          this.posts.update(posts => [
+            ...posts,
+            ...response.content
+          ]);
+        } else {
+          this.posts.set(response.content);
+        }
         this.hasMore = !response.last;
         this.page++;
         this.isLoading = false;
@@ -86,8 +93,7 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
     this.page = 0;
     this.size = 10;
     this.isInitialLoad = true;
-    this.posts = [];
-    this.filteredPosts = [];
+    this.posts.set([]);
     this.fetchPosts();
   }
 

@@ -167,8 +167,8 @@ export class ProfileLinksComponent extends UserProfileBaseComponent {
     if (!this.viewUserInfo && !this.user()!.socialLinks) {
       return;
     }
-    const links = this.viewUserInfo ? this.viewUserInfo.socialLinks : this.user()!.socialLinks;
-    return this.linkConfigs.filter(c => links[c.key]);
+    const links = this.viewUserInfo && this.viewUserInfo.socialLinks ? this.viewUserInfo.socialLinks : this.user()!.socialLinks;
+    return links ? this.linkConfigs.filter(c => links[c.key]) : [];
   }
 
   getIconSvg(key: string): string {

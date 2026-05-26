@@ -41,6 +41,7 @@ public class UserService {
                     User newUser = User.builder()
                             .googleId(googleId)
                             .email(email)
+                            .aliasName(SecurityUtils.randomUserNameGenerator())
                             .name(name)
                             .profileImage(picture)
                             .build();
