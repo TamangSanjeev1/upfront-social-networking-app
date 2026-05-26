@@ -7,7 +7,6 @@ import {NotificationModel} from "../../models/user-profile.model";
 import {Subscription} from "rxjs";
 import {PaginationService} from "../../services/services/pagination.service";
 import {Apiconstants} from "../../apiconstants";
-import console from "node:console";
 import {MatDialog} from "@angular/material/dialog";
 import {ViewNotificationComponent} from "../../../dashboard/view-notification/view-notification.component";
 import {Utils} from "../../utils/utils";

@@ -7,7 +7,6 @@ import {PaginationService} from "../../shared/services/services/pagination.servi
 import {Apiconstants} from "../../shared/apiconstants";
 import {BaseComponent} from "../../core/components/base.component";
 import {AuthService} from "../../core/services/auth.service";
-import * as console from "node:console";
 
 @Component({
   selector: 'app-post-feed',
