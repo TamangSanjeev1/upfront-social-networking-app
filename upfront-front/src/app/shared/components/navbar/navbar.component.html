@@ -79,8 +79,8 @@
     <!-- Profile -->
     <div style="position:relative;">
       <button class="profile-btn" (click)="toggleProfile()">
-        <span style="font-size:13px;font-weight:600;color:#64748b;">Hey, {{ firstName(user()!.name) }}</span>
-        <div class="avatar" style="background:linear-gradient(135deg,#4460ed,#a78bfa);width:32px;height:32px;font-size:12px;">{{initials(user()!.name)}}</div>
+        <span style="font-size:13px;font-weight:600;color:#64748b;">Hey, {{ user() ? firstName(user()!.name) : "" }}</span>
+        <div class="avatar" style="background:linear-gradient(135deg,#4460ed,#a78bfa);width:32px;height:32px;font-size:12px;">{{ user() ? initials(user()!.name) : "" }}</div>
       </button>
 
       <!-- Profile Dropdown -->
