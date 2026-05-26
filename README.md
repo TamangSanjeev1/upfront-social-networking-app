@@ -76,7 +76,7 @@ project/
 │   │           └── notification-panel.component.ts
 │   ├── environments/
 │   │   ├── environment.ts
-│   │   └── environment.production.ts
+│   │   └── environment.prod.ts
 │   ├── Dockerfile
 │   ├── nginx.conf
 │   └── proxy.conf.json
