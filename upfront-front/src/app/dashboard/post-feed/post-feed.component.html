@@ -20,7 +20,7 @@
         <button class="retry-btn" (click)="fetchPosts()">Retry</button>
     </div>
     <div *ngIf="!isInitialLoad && !error" >
-        <app-post-card *ngFor="let p of filteredPosts; trackBy: trackByPostId" [post]="p"></app-post-card>
+        <app-post-card *ngFor="let p of posts(); trackBy: trackByPostId" [post]="p"></app-post-card>
         <!-- Loading more spinner -->
         <div *ngIf="isLoading && !isInitialLoad" class="loading-more">
             <div class="spinner"></div>
@@ -28,7 +28,7 @@
         </div>
 
         <!-- End of feed -->
-        <div *ngIf="!hasMore && posts.length > 0" class="end-of-feed">
+        <div *ngIf="!hasMore && posts().length > 0" class="end-of-feed">
             <div class="end-line"></div>
             <span>You've reached the end</span>
             <div class="end-line"></div>
