@@ -30,6 +30,7 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
             .subscribe(() => {
               this.page = 0;
               this.size = 10;
+              this.hasMore = true;
               this.fetchPosts(true);
             });
   }
