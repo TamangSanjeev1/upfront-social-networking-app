@@ -1,6 +1,6 @@
 server:
   port: 8080
-
+  forward-headers-strategy: framework
 spring:
   datasource:
     url: jdbc:sqlserver://${DB_HOST}:${DB_PORT};databaseName=${DB_NAME};encrypt=true;trustServerCertificate=true
