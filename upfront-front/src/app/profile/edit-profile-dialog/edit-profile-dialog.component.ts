@@ -48,7 +48,7 @@ export class EditProfileDialogComponent extends BaseComponent implements OnInit 
     const p = this.data.profile;
     this.form = this.fb.group({
       name: [p.name, [Validators.required, Validators.minLength(2)]],
-      email: [p.email, [Validators.required, Validators.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i) ]],
+      email: [p.aliasName, [Validators.required]],
       title: [p.title ? p.title : ""],
       bio: [p.bio ? p.bio : "", [Validators.maxLength(500)]],
       location: [p.location ? p.location : ""],

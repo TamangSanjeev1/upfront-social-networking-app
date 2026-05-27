@@ -83,8 +83,8 @@
     <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;" class="nav-item">
       <svg class="nav-icon" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M3 16C3 13.2 5.7 11 9 11C12.3 11 15 13.2 15 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       <div>
-        <div style="font-size:13px;font-weight:600;">Alex Johnson</div>
-        <div style="font-size:11px;color:#94a3b8;">Senior Engineer</div>
+        <div style="font-size:13px;font-weight:600;">{{ user() ? fullName(user()!.name) : '' }}</div>
+        <div style="font-size:11px;color:#94a3b8;">{{ user() ? fullName(user()!.title) : '' }}</div>
       </div>
     </div>
   </div>
