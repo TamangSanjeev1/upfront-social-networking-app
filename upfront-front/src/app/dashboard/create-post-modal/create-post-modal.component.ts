@@ -49,8 +49,8 @@ export class CreatePostModalComponent implements OnInit {
     const d = this.post;
     this.postForm = this.fb.group({
       type:     [d.type ? d.type : this.postType,     [Validators.required, Validators.maxLength(30)]],
-      company:      [d.company],
-      role:         [d.role,         Validators.required],
+      company:      [d.company, [Validators.max(40)]],
+      role:         [d.role,         Validators.required, Validators.max(30)],
       title:        [d.title,        [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
       body:         [d.body,         [Validators.required, Validators.minLength(10)]],
       tags:         [d.tags,         [Validators.required]],
