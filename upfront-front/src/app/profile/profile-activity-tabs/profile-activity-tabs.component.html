@@ -120,6 +120,12 @@
                   Share
               </button>
           </div>
+
+          <app-comment-thread
+                  [postId]="item.id"
+                  [currentUserId]="user()!.id"
+                  [commentInput]="item.comments"
+          />
       </article>
 
     }
