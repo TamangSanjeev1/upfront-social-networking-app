@@ -58,12 +58,6 @@ public class PostEntity {
     private String salary;
 
     @Builder.Default
-    private Long upvotes = 0L;
-
-    @Builder.Default
-    private Long comments = 0L;
-
-    @Builder.Default
     private Boolean isUpvoted = false;
 
     @Builder.Default
@@ -84,6 +78,9 @@ public class PostEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private User user;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<ReactionEntity> reactions = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

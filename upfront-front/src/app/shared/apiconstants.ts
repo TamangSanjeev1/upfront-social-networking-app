@@ -7,4 +7,5 @@ export const Apiconstants = {
   PAGINATION: '/pagination',
   READ: API + '/notification/read',
   TAG: '/tag/',
+  REACTION: API + '/reaction'
 }

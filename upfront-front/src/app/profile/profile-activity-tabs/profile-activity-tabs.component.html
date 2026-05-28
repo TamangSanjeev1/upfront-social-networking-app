@@ -105,7 +105,7 @@
               </button>
               <button class="action-btn">
                   <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 2H13C13.6 2 14 2.4 14 3V10C14 10.6 13.6 11 13 11H5L2 14V3C2 2.4 2.4 2 2 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-                  {{Utils.formatNum(item.comments)}}
+                  {{item.comments ? Utils.formatNum(item.comments) : 0}}
               </button>
               <button class="action-btn">
                   <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L6 4V6C10 6 13 8 13 12C11 10 9 9 6 9V11L2 7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>

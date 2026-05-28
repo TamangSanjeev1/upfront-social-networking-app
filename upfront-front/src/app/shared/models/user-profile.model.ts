@@ -1,3 +1,5 @@
+export type ReactionType = 'LIKE' | 'DISLIKE' | null;
+
 export interface SocialLinks {
   github?: string;
   linkedin?: string;
@@ -68,11 +70,14 @@ export interface Post {
   rating: number;
   salary: string;
   upvotes: number;
+  downvotes: number;
   comments: number;
   isUpvoted: boolean;
   createdAt: string;
   isVerified: boolean;
   sentiment: string;
+  likedByUser: boolean;
+  disLikedByUser: boolean;
 }
 
 export interface NotificationModel {
@@ -94,4 +99,28 @@ export interface PagedResponse<T> {
   totalPages: number;
   last: boolean;
   first: boolean;
+}
+
+export interface Comment {
+  id: number;
+  content: string;
+  authorName: string;
+  authorAvatar: string;
+  createdAt: string;
+}
+
+export interface CommentRequest {
+  content: string;
+  authorName: string;
+  authorAvatar?: string;
+}
+
+export interface ReactionRequest {
+  type: 'LIKE' | 'DISLIKE';
+}
+
+export interface ReactionResponse {
+  likeCount: number;
+  dislikeCount: number;
+  userReaction: ReactionType;
 }
