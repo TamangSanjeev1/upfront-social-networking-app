@@ -23,9 +23,9 @@
         <span *ngIf="post.rating" class="stars" style="font-size:12px;">{{Utils.calculateStars(post.rating)}}</span>
         <span *ngIf="post.rating" style="font-size:12px;font-weight:600;" [style.color]="sentimentColor">{{post.rating}}</span>
         <span *ngIf="post.salary" class="salary-chip">{{post.salary}}</span>
-        <span *ngIf="post.sentiment" style="font-size:11px;padding:2px 6px;border-radius:4px;text-transform:capitalize;" 
-              [style.border-left]="'3px solid ' + sentimentColor" 
-              [style.background]="sentimentColor + '15'" 
+        <span *ngIf="post.sentiment" style="font-size:11px;padding:2px 6px;border-radius:4px;text-transform:capitalize;"
+              [style.border-left]="'3px solid ' + sentimentColor"
+              [style.background]="sentimentColor + '15'"
               [style.color]="sentimentColor">{{post.sentiment}}</span>
       </div>
     </div>
@@ -56,17 +56,25 @@
 
   <!-- Action bar -->
   <div style="display:flex;align-items:center;gap:4px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.05);">
-    <button class="vote-btn" [class.upvoted]="post.isUpvoted" (click)="toggleVote(true)">
-      <svg width="15" height="15" viewBox="0 0 15 15" [attr.fill]="post.isUpvoted ? 'currentColor' : 'none'"><path d="M7.5 2L13 8H10V13H5V8H2L7.5 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      <span>{{Utils.formatNum(post.upvotes)}}</span>
-    </button>
-    <button class="vote-btn" (click)="toggleVote(false)">
-      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 13L2 7H5V2H10V7H13L7.5 13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-    </button>
-    <button class="action-btn">
-      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 2H13C13.6 2 14 2.4 14 3V10C14 10.6 13.6 11 13 11H5L2 14V3C2 2.4 2.4 2 2 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      {{Utils.formatNum(post.comments)}}
-    </button>
+      <div class="reactions">
+          <button
+                  class="reaction-btn like-btn"
+                  [class.active]="post.likedByUser"
+                  (click)="onReact('LIKE')"
+                  [disabled]="reacting">
+              <span class="material-icons">{{ post.likedByUser ? 'thumb_up' : 'thumb_up_off_alt' }}</span>
+              <span class="reaction-count">{{ post.upvotes }}</span>
+          </button>
+
+          <button
+                  class="reaction-btn dislike-btn"
+                  [class.active]="post.disLikedByUser"
+                  (click)="onReact('DISLIKE')"
+                  [disabled]="reacting">
+              <span class="material-icons">{{ post.disLikedByUser ? 'thumb_down' : 'thumb_down_off_alt' }}</span>
+              <span class="reaction-count">{{ post.downvotes }}</span>
+          </button>
+      </div>
     <button class="action-btn">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L6 4V6C10 6 13 8 13 12C11 10 9 9 6 9V11L2 7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
       Share
@@ -75,8 +83,23 @@
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 4H13M2 7.5H10M2 11H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       Save
     </button>
-    <button class="action-btn" style="margin-left:auto;">
+    <button class="action-btn" style="margin-left:auto;" [matMenuTriggerFor]="menu" *ngIf="post.user.id === user()!.id">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="3.5" cy="7.5" r="1.2" fill="currentColor"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/><circle cx="11.5" cy="7.5" r="1.2" fill="currentColor"/></svg>
     </button>
+      <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editPost(post.id)">
+              Edit
+          </button>
+
+          <button mat-menu-item (click)="openDeleteDialog(post.id)">
+              Delete
+          </button>
+      </mat-menu>
   </div>
+
+    <app-comment-thread
+            [postId]="post.id"
+            [currentUserId]="user()!.id"
+            [commentInput]="post.comments"
+    />
 </div>

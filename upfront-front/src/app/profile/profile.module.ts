@@ -11,6 +11,7 @@ import {ProfileLinksComponent} from "./profile-links/profile-links.component";
 import {ProfileBioComponent} from "./profile-bio/profile-bio.component";
 import {ProfileStatsComponent} from "./profile-stats/profile-stats.component";
 import {ProfileActivityTabsComponent} from "./profile-activity-tabs/profile-activity-tabs.component";
+import {CommentThreadComponent} from "../shared/components/comment-thread/comment-thread.component";
 
 
 @NgModule({
@@ -28,13 +29,14 @@ import {ProfileActivityTabsComponent} from "./profile-activity-tabs/profile-acti
     ProfileStatsComponent,
     ProfileActivityTabsComponent
   ],
-  imports: [
-    CommonModule,
-    ProfileRoutingModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule,
-    MatChipsModule
-  ]
+    imports: [
+        CommonModule,
+        ProfileRoutingModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatChipsModule,
+        CommentThreadComponent
+    ]
 })
 export class ProfileModule { }

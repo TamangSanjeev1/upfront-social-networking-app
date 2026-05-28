@@ -323,17 +323,42 @@ body {
 .post-card:nth-child(5) { animation-delay: 0.25s; }
 
 /* Vote button */
-.vote-btn {
-  display: flex; align-items: center; gap: 5px;
-  padding: 6px 12px; border-radius: 8px; border: none;
-  background: var(--surface-secondary); color: var(--text-secondary);
-  font-family: inherit; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: background 0.15s, color 0.15s;
+.reactions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
-.vote-btn:hover   { background: rgba(68,96,237,0.1); color: var(--brand); }
-.vote-btn.upvoted { background: rgba(68,96,237,0.1); color: var(--brand); }
-.vote-btn.downvoted { background: rgba(239,68,68,0.1); color: #ef4444; }
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.18s;
+  color: var(--color-text-muted);
 
+  .material-icons { font-size: 18px; }
+  .reaction-count { font-size: 13px; }
+
+  &:hover:not(:disabled) { background: var(--color-bg); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  &.like-btn.active {
+    color: var(--color-like);
+    background: var(--color-like-bg);
+  }
+  &.dislike-btn.active {
+    color: var(--color-dislike);
+    background: var(--color-dislike-bg);
+  }
+  &.like-btn:hover:not(:disabled):not(.active) { color: var(--color-like); }
+  &.dislike-btn:hover:not(:disabled):not(.active) { color: var(--color-dislike); }
+}
 /* Action button */
 .action-btn {
   display: flex; align-items: center; gap: 5px;

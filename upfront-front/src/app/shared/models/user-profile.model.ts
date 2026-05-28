@@ -1,3 +1,7 @@
+import {UserProfile} from "../../core/models/common-model";
+
+export type ReactionType = 'LIKE' | 'DISLIKE' | null;
+
 export interface SocialLinks {
   github?: string;
   linkedin?: string;
@@ -33,7 +37,7 @@ export interface ActivityPost {
   community?: string;
 }
 
-export interface UserProfile {
+export interface TempUserProfile {
   id: string;
   displayName: string;
   username: string;
@@ -68,11 +72,14 @@ export interface Post {
   rating: number;
   salary: string;
   upvotes: number;
+  downvotes: number;
   comments: number;
   isUpvoted: boolean;
   createdAt: string;
   isVerified: boolean;
   sentiment: string;
+  likedByUser: boolean;
+  disLikedByUser: boolean;
 }
 
 export interface NotificationModel {
@@ -94,4 +101,36 @@ export interface PagedResponse<T> {
   totalPages: number;
   last: boolean;
   first: boolean;
+}
+
+export interface Comment {
+  id: number;
+  content: string;
+  authorName: string;
+  authorAvatar: string;
+  createdAt: string;
+}
+
+export interface ReactionRequest {
+  type: 'LIKE' | 'DISLIKE';
+}
+
+export interface ReactionResponse {
+  likeCount: number;
+  dislikeCount: number;
+  userReaction: ReactionType;
+}
+
+export interface CommentDto {
+  id: number;
+  body: string;
+  author: string;
+  authorInitials: string;
+  createdAt: string;
+  userId: number;
+  user: UserProfile;
+}
+
+export interface CommentRequest {
+  body: string;
 }

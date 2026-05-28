@@ -14,6 +14,8 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {CommentThreadComponent} from "../shared/components/comment-thread/comment-thread.component";
 
 
 @NgModule({
@@ -37,7 +39,11 @@ import {MatProgressSpinner} from "@angular/material/progress-spinner";
         ReactiveFormsModule,
         MatButton,
         MatIcon,
-        MatProgressSpinner
+        MatProgressSpinner,
+        MatMenuTrigger,
+        MatMenu,
+        MatMenuItem,
+        CommentThreadComponent
     ]
 })
 export class DashboardModule { }

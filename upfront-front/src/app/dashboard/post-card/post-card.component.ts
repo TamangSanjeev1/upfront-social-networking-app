@@ -1,17 +1,23 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, signal} from '@angular/core';
 import {Utils} from "../../shared/utils/utils";
 import {Router} from "@angular/router";
+import {BaseComponent} from "../../core/components/base.component";
+import {AuthService} from "../../core/services/auth.service";
+import {PaginationService} from "../../shared/services/services/pagination.service";
+import {MatDialog} from "@angular/material/dialog";
+import {DeleteConfirmationDialogComponent} from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
 
 @Component({
   selector: 'app-post-card',
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css'
 })
-export class PostCardComponent {
+export class PostCardComponent extends BaseComponent {
   @Input() post: any;
   expandedPosts: { [key: number]: boolean } = {};
 
-  constructor(private router: Router) {
+  constructor(private router: Router, authService: AuthService, private postService: PaginationService, private dialog: MatDialog) {
+    super(authService);
   }
 
   togglePost(postId: number) {
@@ -35,21 +41,50 @@ export class PostCardComponent {
     return map[s] || '#64748b';
   }
 
-  toggleVote(isUp: boolean) {
-    if (isUp) {
-      if (this.post.isUpvoted) { 
-        this.post.upvotes--; 
-        this.post.isUpvoted = false; 
-      } else { 
-        this.post.upvotes++; 
-        this.post.isUpvoted = true; 
-      }
-    }
+  reacting = false;
+
+  onReact(type: 'LIKE' | 'DISLIKE') {
+    this.reacting = true;
+    this.postService.react(this.post.id, type).subscribe({
+      next: (res) => {
+        this.post.upvotes = res.likeCount;
+        this.post.downvotes = res.dislikeCount;
+        this.post.likedByUser = res.userReaction == 'LIKE';
+        this.post.disLikedByUser = res.userReaction == 'DISLIKE';
+        this.reacting = false;
+      },
+      error: () => { this.reacting = false; }
+    });
   }
 
   viewProfile(id: any) {
     this.router.navigate(['/profile', id]);
   }
+
+  editPost(postId: number): void {
+    console.log('Edit clicked');
+  }
+
+  openDeleteDialog(postId: number): void {
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+      width: '350px',
+      data: {
+        title: 'Delete Post',
+        message: 'Are you sure you want to delete this post?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deletePost();
+      }
+    });
+  }
+
+  deletePost(): void {
+    console.log('Post deleted');
+  }
+
 
   protected readonly Utils = Utils;
 }

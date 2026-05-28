@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {environment} from "../../../../environments/environment";
-import {PagedResponse, Post} from "../../models/user-profile.model";
+import {PagedResponse, Post, ReactionRequest, ReactionResponse} from "../../models/user-profile.model";
 import {Apiconstants} from "../../apiconstants";
 import {BaseService} from "../base-service/base.service";
 
@@ -35,5 +35,12 @@ export class PaginationService extends BaseService {
       params = params.set('user', user);
     }
     return this.http.get<PagedResponse<Post>>(environment.apiUrl + Apiconstants.POST + Apiconstants.TAG + `${tag}`, { params });
+  }
+
+  react(postId: number, type: 'LIKE' | 'DISLIKE'): Observable<ReactionResponse> {
+    const request: ReactionRequest = {
+      type
+    };
+    return this.http.post<ReactionResponse>(`${environment.apiUrl+ Apiconstants.REACTION}/${postId}`, request);
   }
 }

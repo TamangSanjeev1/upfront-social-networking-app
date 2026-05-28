@@ -29,6 +29,7 @@ export class ProfileActivityTabsComponent extends UserProfileBaseComponent imple
   posts = signal<Post[]>([]);
   activeFilter = 'all';
   expandedPosts: { [key: string]: boolean } = {};
+  reacting = false;
 
   readonly tabs: Tab[] = [
     { type: 'all', label: 'All', icon: 'view_list', count: 0 },
@@ -138,6 +139,30 @@ export class ProfileActivityTabsComponent extends UserProfileBaseComponent imple
   togglePost(postId: number) {
     this.expandedPosts[postId] = !this.expandedPosts[postId];
   }
+
+  onReact(type: 'LIKE' | 'DISLIKE', id: number) {
+    this.reacting = true;
+    this.postService.react(id, type).subscribe({
+      next: (res) => {
+        this.posts.update(posts =>
+            posts.map(post =>
+                post.id === id
+                    ? {
+                      ...post,
+                      upvotes: res.likeCount,
+                      downvotes: res.dislikeCount,
+                      likedByUser: res.userReaction === 'LIKE',
+                      disLikedByUser: res.userReaction === 'DISLIKE'
+                    }
+                    : post
+            )
+        );
+        this.reacting = false;
+      },
+      error: () => { this.reacting = false; }
+    });
+  }
+
 
   protected readonly Utils = Utils;
 }

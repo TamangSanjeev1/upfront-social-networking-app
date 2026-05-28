@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -55,22 +56,23 @@ public class PostServiceImpl {
         return toPagedResponse(result, page, size);
     }
 
+    @Transactional(readOnly = true)
     public PagedResponse<PostDto> getPostsByUser(int page, int size, Long userId) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostEntity> result = postRepository.findByUser_IdOrderByCreatedAtDesc(userId, pageable);
+        Page<PostEntity> result = postRepository.findAllByUserIdWithReactions(userId, pageable);
         return toPagedResponse(result, page, size);
     }
 
 
     public PagedResponse<PostDto> getPostsByTag(String tag, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostEntity> result = postRepository.findByTypeOrderByCreatedAtDesc(tag, pageable);
+        Page<PostEntity> result = postRepository.findByTypeOrderByCreatedDateDesc(tag, pageable);
         return toPagedResponse(result, page, size);
     }
 
     public PagedResponse<PostDto> getPostsByTagAndUser(Long userId, String tag, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostEntity> result = postRepository.findByTypeAndUser_IdOrderByCreatedAtDesc(tag, userId, pageable);
+        Page<PostEntity> result = postRepository.findPostByUserAndTag(tag, userId, pageable);
         return toPagedResponse(result, page, size);
     }
 

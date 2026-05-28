@@ -23,8 +23,33 @@ public class PostDto {
     private String salary;
     private Boolean isVerified;
     private Long upvotes;
+    private Long downvotes;
+    private boolean likedByUser;
+    private boolean disLikedByUser;
     private Long comments;
     private String sentiment;
     private LocalDateTime createdAt;
     private UserDto user;
+
+    public PostDto(Long id, String type, String author, String company, String role,
+                   String title, String body, Double rating, String salary,
+                   Boolean isVerified, String sentiment, LocalDateTime createdAt,
+                   Long upvotes, Long downvotes, Long userId, String userName, String profileImage) {
+        this.id = id;
+        this.type = type;
+        this.author = author;
+        this.company = company;
+        this.role = role;
+        this.title = title;
+        this.body = body;
+        this.rating = rating;
+        this.salary = salary;
+        this.isVerified = isVerified;
+        this.sentiment = sentiment;
+        this.createdAt = createdAt;
+        this.upvotes = upvotes;
+        this.downvotes = downvotes;
+
+        this.user = UserDto.builder().id(userId).name(userName).profileImage(profileImage).build();
+    }
 }
