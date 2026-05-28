@@ -14,6 +14,11 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> findAllByOrderByCreatedAtDesc();
+
+    @Query(
+            value = "SELECT p FROM PostEntity p LEFT JOIN FETCH p.reactions ORDER BY p.createdAt DESC",
+            countQuery = "SELECT COUNT(p) FROM PostEntity p"
+    )
     Page<PostEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     Page<PostEntity> findByUser_IdOrderByCreatedAtDesc(
@@ -27,6 +32,26 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     )
     Page<PostEntity> findAllByUserIdWithReactions(@Param("userId") Long userId, Pageable pageable);
 
+    @Query(
+            value = """
+        SELECT DISTINCT p
+        FROM PostEntity p
+        LEFT JOIN FETCH p.reactions
+        WHERE p.type = :type
+        ORDER BY p.createdAt DESC
+    """,
+            countQuery = """
+        SELECT COUNT(p)
+        FROM PostEntity p
+        WHERE p.user.id = :userId
+        AND :tag MEMBER OF p.tags
+    """
+    )
+    Page<PostEntity> findByTypeOrderByCreatedDateDesc(
+            @Param("type") String type,
+            Pageable pageable
+    );
+
     Page<PostEntity> findByTypeOrderByCreatedAtDesc(String type, Pageable pageable);
 
     @Query(
@@ -34,6 +59,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
         SELECT DISTINCT p
         FROM PostEntity p
         LEFT JOIN FETCH p.reactions
+        LEFT JOIN FETCH p.comments
         WHERE p.user.id = :userId
         AND :tag MEMBER OF p.tags
         ORDER BY p.createdAt DESC

@@ -66,7 +66,7 @@ public class PostServiceImpl {
 
     public PagedResponse<PostDto> getPostsByTag(String tag, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostEntity> result = postRepository.findByTypeOrderByCreatedAtDesc(tag, pageable);
+        Page<PostEntity> result = postRepository.findByTypeOrderByCreatedDateDesc(tag, pageable);
         return toPagedResponse(result, page, size);
     }
 
