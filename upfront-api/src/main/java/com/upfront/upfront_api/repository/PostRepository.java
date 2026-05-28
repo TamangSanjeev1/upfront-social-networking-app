@@ -29,6 +29,28 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     Page<PostEntity> findByTypeOrderByCreatedAtDesc(String type, Pageable pageable);
 
+    @Query(
+            value = """
+        SELECT DISTINCT p
+        FROM PostEntity p
+        LEFT JOIN FETCH p.reactions
+        WHERE p.user.id = :userId
+        AND :tag MEMBER OF p.tags
+        ORDER BY p.createdAt DESC
+    """,
+            countQuery = """
+        SELECT COUNT(p)
+        FROM PostEntity p
+        WHERE p.user.id = :userId
+        AND :tag MEMBER OF p.tags
+    """
+    )
+    Page<PostEntity> findPostByUserAndTag(
+            @Param("tag") String tag,
+            @Param("userId") Long userId,
+            Pageable pageable
+    );
+
     Page<PostEntity> findByTypeAndUser_IdOrderByCreatedAtDesc(
             String tag,
             Long userId,

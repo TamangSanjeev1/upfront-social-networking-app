@@ -1,3 +1,5 @@
+import {UserProfile} from "../../core/models/common-model";
+
 export type ReactionType = 'LIKE' | 'DISLIKE' | null;
 
 export interface SocialLinks {
@@ -35,7 +37,7 @@ export interface ActivityPost {
   community?: string;
 }
 
-export interface UserProfile {
+export interface TempUserProfile {
   id: string;
   displayName: string;
   username: string;
@@ -109,12 +111,6 @@ export interface Comment {
   createdAt: string;
 }
 
-export interface CommentRequest {
-  content: string;
-  authorName: string;
-  authorAvatar?: string;
-}
-
 export interface ReactionRequest {
   type: 'LIKE' | 'DISLIKE';
 }
@@ -123,4 +119,18 @@ export interface ReactionResponse {
   likeCount: number;
   dislikeCount: number;
   userReaction: ReactionType;
+}
+
+export interface CommentDto {
+  id: number;
+  body: string;
+  author: string;
+  authorInitials: string;
+  createdAt: string;
+  userId: number;
+  user: UserProfile;
+}
+
+export interface CommentRequest {
+  body: string;
 }

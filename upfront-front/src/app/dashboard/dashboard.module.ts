@@ -15,6 +15,7 @@ import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {CommentThreadComponent} from "../shared/components/comment-thread/comment-thread.component";
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
         MatProgressSpinner,
         MatMenuTrigger,
         MatMenu,
-        MatMenuItem
+        MatMenuItem,
+        CommentThreadComponent
     ]
 })
 export class DashboardModule { }

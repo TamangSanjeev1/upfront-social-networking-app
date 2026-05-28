@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { UserProfile } from '../models/user-profile.model';
+import { TempUserProfile } from '../models/user-profile.model';
 
-export const MOCK_USER: UserProfile = {
+export const MOCK_USER: TempUserProfile = {
   id: 'usr_a7f2c9d1',
   displayName: 'Alexandra Chen',
   username: 'alex.chen',
@@ -117,7 +117,7 @@ export const MOCK_USER: UserProfile = {
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-  private _profile = signal<UserProfile>(MOCK_USER);
+  private _profile = signal<TempUserProfile>(MOCK_USER);
   private _isLoading = signal<boolean>(false);
   private _isDarkMode = signal<boolean>(false);
 
@@ -131,7 +131,7 @@ export class ProfileService {
     return rep >= 1000 ? `${(rep / 1000).toFixed(1)}k` : rep.toString();
   });
 
-  updateProfile(updates: Partial<UserProfile>): void {
+  updateProfile(updates: Partial<TempUserProfile>): void {
     this._profile.update(p => ({ ...p, ...updates }));
   }
 

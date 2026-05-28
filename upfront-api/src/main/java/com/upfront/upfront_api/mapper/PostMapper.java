@@ -32,6 +32,7 @@ public class PostMapper {
                 .filter(r -> ReactionType.LIKE.equals(r.getType())).count();
         long downvotes = entity.getReactions().stream()
                 .filter(r -> ReactionType.DISLIKE.equals(r.getType())).count();
+        long commentCount = entity.getComments().size();
         boolean isLikedByUser = entity.getReactions().stream()
                 .filter(r -> ReactionType.LIKE.equals(r.getType()))
                 .anyMatch(r -> r.getUser().getId().equals(SecurityUtils.getCurrentUserId()));
@@ -53,6 +54,7 @@ public class PostMapper {
                 .downvotes(downvotes)
                 .isVerified(entity.getIsVerified())
                 .sentiment(entity.getSentiment())
+                .comments(commentCount)
                 .createdAt(entity.getCreatedAt())
                 .likedByUser(isLikedByUser)
                 .disLikedByUser(isDisLikedByUser)
