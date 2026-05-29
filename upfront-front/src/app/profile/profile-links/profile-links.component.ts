@@ -1,9 +1,6 @@
 // profile-links.component.ts
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {ProfileService} from "../../shared/services/profile.service";
-import {BaseComponent} from "../../core/components/base.component";
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {AuthService} from "../../core/services/auth.service";
-import {UserService} from "../../shared/services/services/user.service";
 import {UserProfileBaseComponent} from "../base-files/user-profile-base.component";
 
 interface LinkConfig {
@@ -151,8 +148,8 @@ interface LinkConfig {
 })
 export class ProfileLinksComponent extends UserProfileBaseComponent {
 
-  constructor(authService: AuthService, userService: UserService) {
-    super(authService, userService);
+  constructor(authService: AuthService) {
+    super(authService);
   }
 
   readonly linkConfigs: LinkConfig[] = [

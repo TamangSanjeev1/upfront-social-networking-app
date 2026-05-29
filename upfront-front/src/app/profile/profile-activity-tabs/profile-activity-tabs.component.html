@@ -119,6 +119,18 @@
                   <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5L6 4V6C10 6 13 8 13 12C11 10 9 9 6 9V11L2 7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
                   Share
               </button>
+              <button class="action-btn" style="margin-left:auto;" [matMenuTriggerFor]="menu" *ngIf="item.user.id === user()!.id">
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="3.5" cy="7.5" r="1.2" fill="currentColor"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/><circle cx="11.5" cy="7.5" r="1.2" fill="currentColor"/></svg>
+              </button>
+              <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="editPost(item.id)">
+                      Edit
+                  </button>
+
+                  <button mat-menu-item (click)="openDeleteDialog(item.id)">
+                      Delete
+                  </button>
+              </mat-menu>
           </div>
 
           <app-comment-thread

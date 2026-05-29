@@ -12,6 +12,7 @@ import {ProfileBioComponent} from "./profile-bio/profile-bio.component";
 import {ProfileStatsComponent} from "./profile-stats/profile-stats.component";
 import {ProfileActivityTabsComponent} from "./profile-activity-tabs/profile-activity-tabs.component";
 import {CommentThreadComponent} from "../shared/components/comment-thread/comment-thread.component";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 
 
 @NgModule({
@@ -36,7 +37,10 @@ import {CommentThreadComponent} from "../shared/components/comment-thread/commen
         MatIconModule,
         MatTooltipModule,
         MatChipsModule,
-        CommentThreadComponent
+        CommentThreadComponent,
+        MatMenu,
+        MatMenuItem,
+        MatMenuTrigger
     ]
 })
 export class ProfileModule { }

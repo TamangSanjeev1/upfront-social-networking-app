@@ -9,18 +9,18 @@ import {DeleteConfirmationDialogComponent} from "../delete-confirmation-dialog/d
 import {Apiconstants} from "../../shared/apiconstants";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {RefreshService} from "../../shared/services/services/refresh-service";
+import {UserProfileBaseComponent} from "../../profile/base-files/user-profile-base.component";
 
 @Component({
   selector: 'app-post-card',
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css'
 })
-export class PostCardComponent extends BaseComponent {
+export class PostCardComponent extends UserProfileBaseComponent {
   @Input() post: any;
   expandedPosts: { [key: number]: boolean } = {};
-  private refreshService = inject(RefreshService);
 
-  constructor(private router: Router, authService: AuthService, private postService: PaginationService, private dialog: MatDialog, private snackBar: MatSnackBar) {
+  constructor(private router: Router, authService: AuthService, private postService: PaginationService) {
     super(authService);
   }
 
@@ -64,43 +64,6 @@ export class PostCardComponent extends BaseComponent {
   viewProfile(id: any) {
     this.router.navigate(['/profile', id]);
   }
-
-  editPost(postId: number): void {
-    console.log('Edit clicked');
-  }
-
-  openDeleteDialog(postId: number): void {
-    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
-      width: '350px',
-      data: {
-        title: 'Delete Post',
-        message: 'Are you sure you want to delete this post?'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.deletePost(postId);
-      }
-    });
-  }
-
-  deletePost(id: number): void {
-    this.postService.deleteRequest(Apiconstants.POST + "/", id).subscribe({
-      next: user => {
-        this.refreshService.triggerRefresh();
-        this.snackBar.open('Post Deleted successfully!', '✕', {
-          duration: 3500,
-          panelClass: ['snack-success'],
-        })
-      },
-      error: () => this.snackBar.open('Post could not be deleted!', '✕', {
-        duration: 3500,
-        panelClass: ['snack-fail'],
-      })
-    });
-  }
-
 
   protected readonly Utils = Utils;
 }
