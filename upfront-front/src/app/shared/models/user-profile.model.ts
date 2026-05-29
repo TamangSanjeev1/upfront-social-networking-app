@@ -80,6 +80,7 @@ export interface Post {
   sentiment: string;
   likedByUser: boolean;
   disLikedByUser: boolean;
+  user: UserProfile;
 }
 
 export interface NotificationModel {

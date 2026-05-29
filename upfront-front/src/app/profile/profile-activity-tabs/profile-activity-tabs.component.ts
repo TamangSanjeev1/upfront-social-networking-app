@@ -1,13 +1,12 @@
-// profile-activity-tabs.component.ts
-import {Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild,} from '@angular/core';
+import {Component, DestroyRef, ElementRef, OnDestroy, OnInit, signal, ViewChild,} from '@angular/core';
 import {Post} from "../../shared/models/user-profile.model";
 import {UserProfileBaseComponent} from "../base-files/user-profile-base.component";
 import {Apiconstants} from "../../shared/apiconstants";
-import {takeUntil} from "rxjs";
+import {Subscription, takeUntil} from "rxjs";
 import {PaginationService} from "../../shared/services/services/pagination.service";
 import {Utils} from "../../shared/utils/utils";
 import {AuthService} from "../../core/services/auth.service";
-import {UserService} from "../../shared/services/services/user.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 type TabType = 'post' | 'review' | 'comment' | 'saved';
 
@@ -38,13 +37,24 @@ export class ProfileActivityTabsComponent extends UserProfileBaseComponent imple
     { type: 'comment', label: 'Comments', icon: 'chat_bubble_outline', count: 0 },
     { type: 'saved', label: 'Saved', icon: 'bookmark_border', count: 0 },
   ];
+  private subscription?: Subscription;
 
-  constructor(authService: AuthService, userService: UserService, private postService: PaginationService) {
-    super(authService, userService);
+  constructor(authService: AuthService, private postService: PaginationService, private destroyRef: DestroyRef) {
+    super(authService);
   }
 
   ngOnInit() {
     this.fetchPosts();
+
+    this.subscription =
+        this.refreshService.refresh$
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+              this.page = 0;
+              this.size = 10;
+              this.hasMore = true;
+              this.fetchPosts(true);
+            });
   }
 
   updateTabCounts(): void {
@@ -86,7 +96,7 @@ export class ProfileActivityTabsComponent extends UserProfileBaseComponent imple
     super.destroy();
   }
 
-  fetchPosts() {
+  fetchPosts(fetchFromFirst: boolean = false) {
     if (this.isLoading || !this.hasMore) return;
     this.isLoading = true;
     this.error = null;
@@ -96,10 +106,14 @@ export class ProfileActivityTabsComponent extends UserProfileBaseComponent imple
 
     request$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
-        this.posts.update(posts => [
-          ...posts,
-          ...response.content
-        ]);
+        if (!fetchFromFirst) {
+          this.posts.update(posts => [
+            ...posts,
+            ...response.content
+          ]);
+        } else {
+          this.posts.set(response.content);
+        }
         this.updateTabCounts();
         this.hasMore = !response.last;
         this.page++;

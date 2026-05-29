@@ -91,8 +91,8 @@ import {UserService} from "../../shared/services/services/user.service";
 export class ProfileBioComponent extends UserProfileBaseComponent {
   protected expanded = signal(false);
 
-  constructor(authService: AuthService, userService: UserService) {
-    super(authService, userService);
+  constructor(authService: AuthService) {
+    super(authService);
   }
 
   isTruncatable(): boolean {

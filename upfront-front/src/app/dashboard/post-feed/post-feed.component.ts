@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
+import {Component, DestroyRef, ElementRef, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
 import {Subscription, takeUntil} from "rxjs";
 import {Post} from "../../shared/models/user-profile.model";
 import {RefreshService} from "../../shared/services/services/refresh-service";
@@ -6,6 +6,7 @@ import {PaginationService} from "../../shared/services/services/pagination.servi
 import {Apiconstants} from "../../shared/apiconstants";
 import {BaseComponent} from "../../core/components/base.component";
 import {AuthService} from "../../core/services/auth.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-post-feed',
@@ -18,7 +19,7 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
   fadeOut = false;
   @ViewChild('scrollAnchor') scrollAnchor!: ElementRef;
   private subscription?: Subscription;
-  constructor(authService: AuthService, private refreshService: RefreshService, private postService: PaginationService) {
+  constructor(authService: AuthService, private refreshService: RefreshService, private postService: PaginationService, private destroyRef: DestroyRef) {
     super(authService);
   }
 
@@ -27,6 +28,7 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
 
     this.subscription =
         this.refreshService.refresh$
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
               this.page = 0;
               this.size = 10;

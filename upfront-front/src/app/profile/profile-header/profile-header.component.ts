@@ -16,10 +16,9 @@ import {UserService} from "../../shared/services/services/user.service";
 })
 export class ProfileHeaderComponent extends UserProfileBaseComponent implements OnInit {
   protected ps = inject(ProfileService);
-  private dialog = inject(MatDialog);
 
-  constructor(authService: AuthService, userService: UserService) {
-    super(authService, userService);
+  constructor(authService: AuthService) {
+    super(authService);
   }
 
   protected coverLoaded = signal(false);
