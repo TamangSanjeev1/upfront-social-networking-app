@@ -10,13 +10,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> findAllByOrderByCreatedAtDesc();
 
     @Query(
-            value = "SELECT p FROM PostEntity p LEFT JOIN FETCH p.reactions ORDER BY p.createdAt DESC",
+            value = "SELECT p FROM PostEntity p LEFT JOIN FETCH p.reactions WHERE p.status = 'A' ORDER BY p.createdAt DESC",
             countQuery = "SELECT COUNT(p) FROM PostEntity p"
     )
     Page<PostEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
@@ -27,7 +28,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     );
 
     @Query(
-            value = "SELECT p FROM PostEntity p LEFT JOIN FETCH p.reactions WHERE p.user.id = :userId ORDER BY p.createdAt DESC",
+            value = "SELECT p FROM PostEntity p LEFT JOIN FETCH p.reactions WHERE p.status = 'A' AND p.user.id = :userId ORDER BY p.createdAt DESC",
             countQuery = "SELECT COUNT(p) FROM PostEntity p WHERE p.user.id = :userId"
     )
     Page<PostEntity> findAllByUserIdWithReactions(@Param("userId") Long userId, Pageable pageable);
@@ -37,7 +38,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
         SELECT DISTINCT p
         FROM PostEntity p
         LEFT JOIN FETCH p.reactions
-        WHERE p.type = :type
+        WHERE p.type = :type AND p.status = 'A'
         ORDER BY p.createdAt DESC
     """,
             countQuery = """
@@ -60,7 +61,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
         FROM PostEntity p
         LEFT JOIN FETCH p.reactions
         LEFT JOIN FETCH p.comments
-        WHERE p.user.id = :userId
+        WHERE p.user.id = :userId AND p.status = 'A'
         AND :tag MEMBER OF p.tags
         ORDER BY p.createdAt DESC
     """,
@@ -82,4 +83,6 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             Long userId,
             Pageable pageable
     );
+
+    Optional<PostEntity> findByIdAndUserId(Long id, Long userId);
 }

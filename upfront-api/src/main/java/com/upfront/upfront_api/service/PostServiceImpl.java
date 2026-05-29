@@ -3,8 +3,11 @@ package com.upfront.upfront_api.service;
 import com.upfront.upfront_api.dto.PostDto;
 import com.upfront.upfront_api.dto.response.PagedResponse;
 import com.upfront.upfront_api.entity.PostEntity;
+import com.upfront.upfront_api.exception.ResourceNotFoundException;
 import com.upfront.upfront_api.mapper.PostMapper;
 import com.upfront.upfront_api.repository.PostRepository;
+import com.upfront.upfront_api.utils.DBConstantsEnum;
+import com.upfront.upfront_api.utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +51,13 @@ public class PostServiceImpl {
     }
 
     public void delete(Long id) {
-        postRepository.deleteById(id);
+        Optional<PostEntity> postEntity = postRepository.findByIdAndUserId(id, SecurityUtils.getCurrentUserId());
+        if (postEntity.isPresent()) {
+            postEntity.get().setStatus(DBConstantsEnum.DELETED.getStatus());
+            postRepository.save(postEntity.get());
+        } else {
+            throw new ResourceNotFoundException("Not found", id.toString());
+        }
     }
 
     public PagedResponse<PostDto> getPosts(int page, int size) {

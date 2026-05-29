@@ -1,5 +1,6 @@
 package com.upfront.upfront_api.entity;
 
+import com.upfront.upfront_api.utils.DBConstantsEnum;
 import com.upfront.upfront_api.utils.SecurityUtils;
 import jakarta.persistence.*;
 import lombok.*;
@@ -85,6 +86,9 @@ public class PostEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<CommentEntity> comments = new ArrayList<>();
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'A'")
+    private String status;
 
     @PrePersist
     protected void onCreate() {
