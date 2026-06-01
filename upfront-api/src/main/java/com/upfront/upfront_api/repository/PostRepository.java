@@ -15,6 +15,18 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> findAllByOrderByCreatedAtDesc();
+    @Query("""
+    SELECT p
+    FROM PostEntity p
+    WHERE (
+        LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        OR p.body LIKE LOWER(CONCAT('%', :keyword, '%'))
+        OR LOWER(p.type) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        OR LOWER(p.author) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    )
+    AND p.status = 'A'
+    """)
+    Page<PostEntity> searchPosts(@Param("keyword") String keyword, Pageable pageable);
 
     @Query(
             value = "SELECT p FROM PostEntity p LEFT JOIN FETCH p.reactions WHERE p.status = 'A' ORDER BY p.createdAt DESC",
