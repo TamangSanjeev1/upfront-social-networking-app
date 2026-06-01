@@ -29,19 +29,19 @@
 
       <!-- Action Buttons -->
       <div class="action-buttons">
-        <button
-          mat-flat-button
-          class="btn-follow"
-          [class.following]="ps.profile().isFollowing"
-          (click)="ps.toggleFollow()"
-        >
-          <mat-icon>{{ ps.profile().isFollowing ? 'person_check' : 'person_add' }}</mat-icon>
-          {{ ps.profile().isFollowing ? 'Following' : 'Follow' }}
-        </button>
-        <button mat-stroked-button class="btn-message">
-          <mat-icon>mail_outline</mat-icon>
-          Message
-        </button>
+<!--        <button-->
+<!--          mat-flat-button-->
+<!--          class="btn-follow"-->
+<!--          [class.following]="ps.profile().isFollowing"-->
+<!--          (click)="ps.toggleFollow()"-->
+<!--        >-->
+<!--          <mat-icon>{{ ps.profile().isFollowing ? 'person_check' : 'person_add' }}</mat-icon>-->
+<!--          {{ ps.profile().isFollowing ? 'Following' : 'Follow' }}-->
+<!--        </button>-->
+<!--        <button mat-stroked-button class="btn-message">-->
+<!--          <mat-icon>mail_outline</mat-icon>-->
+<!--          Message-->
+<!--        </button>-->
         <button mat-icon-button class="btn-edit" *ngIf="!viewUserInfo" (click)="openEditDialog()" matTooltip="Edit Profile">
           <mat-icon>edit</mat-icon>
         </button>
