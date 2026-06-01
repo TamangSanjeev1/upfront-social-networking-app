@@ -54,10 +54,8 @@
           <span
             class="type-badge"
             [style.color]="typeConfig(item.type).color"
-            [style.background]="typeConfig(item.type).bg"
-          >
-            <mat-icon class="badge-icon">{{ typeConfig(item.type).icon }}</mat-icon>
-            {{ typeConfig(item.type).label }}
+            [style.background]="typeConfig(item.type).bg">
+            {{typeInfo(item).label}}
           </span>
             <span *ngIf="item.rating" class="stars" style="font-size:12px;">{{Utils.calculateStars(item.rating)}}</span>
             <span *ngIf="item.rating" style="font-size:12px;font-weight:600;" [style.color]="sentimentColor(item)">{{item.rating}}</span>

@@ -37,6 +37,18 @@ export class ProfileActivityTabsComponent extends UserProfileBaseComponent imple
     { type: 'comment', label: 'Comments', icon: 'chat_bubble_outline', count: 0 },
     { type: 'saved', label: 'Saved', icon: 'bookmark_border', count: 0 },
   ];
+
+  typeInfo(post: any) {
+    const types: any = {
+      review: { label: 'Review', color: '#4460ed', bg: 'rgba(68,96,237,0.08)' },
+      post: { label: 'Discussion', color: '#64748b', bg: 'rgba(100,116,139,0.08)' },
+      salary: { label: 'Salary', color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
+      question: { label: 'Question', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
+      interview: { label: 'Interview', color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)' },
+    };
+    return types[post.type] || types.post;
+  }
+
   private subscription?: Subscription;
 
   constructor(authService: AuthService, private postService: PaginationService, private destroyRef: DestroyRef) {
