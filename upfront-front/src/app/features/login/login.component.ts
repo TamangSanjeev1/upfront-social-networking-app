@@ -284,7 +284,7 @@ import { AuthService } from '../../core/services/auth.service';
         <div class="uf-hero">
           <div class="uf-hero-tag">No surprises. Ever.</div>
           <p class="uf-h1">Be <em>upfront</em> about everything.</p>
-          <p class="uf-hero-sub">Transparent pricing, clear timelines, and honest communication — all in one place. Finally, a platform that says what it means.</p>
+          <p class="uf-hero-sub">Transparent opinions, clear experiences, and honest communication — all in one place. Finally, a platform that says what it means.</p>
         </div>
       </div>
 
