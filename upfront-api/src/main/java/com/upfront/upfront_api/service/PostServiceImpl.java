@@ -33,6 +33,7 @@ public class PostServiceImpl {
                 entity.setCreatedAt(postEntity.get().getCreatedAt());
                 entity.setComments(postEntity.get().getComments());
                 entity.setReactions(postEntity.get().getReactions());
+                entity.setStatus(DBConstantsEnum.ACTIVE.getStatus());
             }
         }
 

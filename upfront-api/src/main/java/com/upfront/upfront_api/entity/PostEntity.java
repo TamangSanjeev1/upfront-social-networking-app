@@ -109,6 +109,5 @@ public class PostEntity {
         this.updatedAt = LocalDateTime.now();
         author = SecurityUtils.getCurrentName();
         user = User.builder().id(SecurityUtils.getCurrentUserId()).build();
-        status = DBConstantsEnum.ACTIVE.getStatus();
     }
 }
