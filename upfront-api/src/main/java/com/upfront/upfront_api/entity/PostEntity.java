@@ -4,6 +4,8 @@ import com.upfront.upfront_api.utils.DBConstantsEnum;
 import com.upfront.upfront_api.utils.SecurityUtils;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Audited
 public class PostEntity {
 
     @Id
@@ -78,12 +81,15 @@ public class PostEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
+    @NotAudited
     private User user;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @NotAudited
     @Builder.Default
     private List<ReactionEntity> reactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @NotAudited
     @Builder.Default
     private List<CommentEntity> comments = new ArrayList<>();
 
@@ -95,10 +101,14 @@ public class PostEntity {
         createdAt = LocalDateTime.now();
         user = User.builder().id(SecurityUtils.getCurrentUserId()).build();
         author = SecurityUtils.getCurrentName();
+        status = DBConstantsEnum.ACTIVE.getStatus();
     }
 
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+        author = SecurityUtils.getCurrentName();
+        user = User.builder().id(SecurityUtils.getCurrentUserId()).build();
+        status = DBConstantsEnum.ACTIVE.getStatus();
     }
 }

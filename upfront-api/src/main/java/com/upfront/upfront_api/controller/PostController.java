@@ -32,15 +32,17 @@ public class PostController {
     ) {
         userService.updateUserCounts();
         PostDto postDto = postService.create(request);
-        NotificationEntity notificationEntity = NotificationEntity.builder()
-                .unread(true)
-                .iconBg(NotificationEnum.POST.getIconBg())
-                .type(NotificationEnum.POST.getType())
-                .title(NotificationEnum.POST.getTitle() + SecurityUtils.getCurrentName())
-                .body(request.getTitle())
-                .timestamp(LocalDateTime.now())
-                .build();
-        notificationService.sendNotificationGeneral(notificationService.save(notificationEntity));
+        if (request.getId() == null) {
+            NotificationEntity notificationEntity = NotificationEntity.builder()
+                    .unread(true)
+                    .iconBg(NotificationEnum.POST.getIconBg())
+                    .type(NotificationEnum.POST.getType())
+                    .title(NotificationEnum.POST.getTitle() + SecurityUtils.getCurrentName())
+                    .body(request.getTitle())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            notificationService.sendNotificationGeneral(notificationService.save(notificationEntity));
+        }
         return postDto;
 
     }
