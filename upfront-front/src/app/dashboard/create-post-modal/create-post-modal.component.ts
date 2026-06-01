@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output, signal} from '@angular/core';
+import {Component, EventEmitter, Inject, inject, Input, OnInit, Output, signal} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Post} from "../../shared/models/user-profile.model";
 import {BaseService} from "../../shared/services/base-service/base.service";
@@ -6,6 +6,7 @@ import {Apiconstants} from "../../shared/apiconstants";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {RefreshService} from "../../shared/services/services/refresh-service";
 import {AuthService} from "../../core/services/auth.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-create-post-modal',
@@ -13,8 +14,6 @@ import {AuthService} from "../../core/services/auth.service";
   styleUrl: './create-post-modal.component.scss'
 })
 export class CreatePostModalComponent implements OnInit {
-  @Input() isOpen = false;
-  @Output() close = new EventEmitter<void>();
   private snackBar = inject(MatSnackBar);
   private refreshService = inject(RefreshService);
   private authService = inject(AuthService);
@@ -39,21 +38,23 @@ export class CreatePostModalComponent implements OnInit {
 
   postType = 'post';
 
-  constructor(private fb: FormBuilder, private apiService: BaseService) {}
+  constructor(private fb: FormBuilder, private apiService: BaseService, private dialogRef: MatDialogRef<CreatePostModalComponent>, @Inject(MAT_DIALOG_DATA) public data: Post) {}
 
   ngOnInit(): void {
     this.buildForm();
   }
 
   private buildForm(): void {
-    const d = this.post;
+    const d = this.data ? this.data : this.post;
+    this.postType = this.data ? this.data.type : this.postType;
     this.postForm = this.fb.group({
+      id:     [d.id],
       type:     [d.type ? d.type : this.postType,     [Validators.required, Validators.maxLength(30)]],
-      company:      [d.company, [Validators.max(40)]],
-      role:         [d.role,         Validators.required, Validators.max(30)],
+      company: [d.company, [Validators.required, Validators.minLength(5), Validators.maxLength(40)]],
+      role:         [d.role,         [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
       title:        [d.title,        [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
       body:         [d.body,         [Validators.required, Validators.minLength(10)]],
-      tags:         [d.tags,         [Validators.required]],
+      tags:         [d.tags ? d.tags : [],         [Validators.required]],
       rating:       [d.rating,       [Validators.required, Validators.min(0), Validators.max(5)]],
       salary:       [d.salary],
       sentiment:    [d.sentiment,    Validators.required],
@@ -108,7 +109,9 @@ export class CreatePostModalComponent implements OnInit {
         this.saving.set(false);
         this.submitted = false;
         this.postForm.reset();
-        this.close.emit();
+        this.dialogRef.close({
+          created: true
+        });
         this.refreshService.triggerRefresh();
         this.authService.updateUserDetails();
         this.setPostType("post");
@@ -126,5 +129,9 @@ export class CreatePostModalComponent implements OnInit {
       }
     });
 
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 }

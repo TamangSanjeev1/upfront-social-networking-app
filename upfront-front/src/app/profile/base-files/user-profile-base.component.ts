@@ -11,6 +11,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {PaginationService} from "../../shared/services/services/pagination.service";
 import {Apiconstants} from "../../shared/apiconstants";
+import {CreatePostModalComponent} from "../../dashboard/create-post-modal/create-post-modal.component";
+import {Post} from "../../shared/models/user-profile.model";
 
 @Directive()
 export class UserProfileBaseComponent extends BaseComponent implements OnDestroy {
@@ -30,8 +32,14 @@ export class UserProfileBaseComponent extends BaseComponent implements OnDestroy
         this.userService.viewUser.set(null);
     }
 
-    editPost(postId: number): void {
-        console.log('Edit clicked');
+    editPost(post: Post): void {
+        if (!post) return;
+        const dialogRef = this.dialog.open(CreatePostModalComponent, {
+            width: '700px',
+            maxHeight: '90vh',
+            disableClose: true,
+            data: post
+        });
     }
 
     openDeleteDialog(postId: number): void {

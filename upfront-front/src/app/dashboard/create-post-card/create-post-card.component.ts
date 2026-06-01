@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import {BaseComponent} from "../../core/components/base.component";
 import {AuthService} from "../../core/services/auth.service";
+import {MatDialog} from "@angular/material/dialog";
+import {CreatePostModalComponent} from "../create-post-modal/create-post-modal.component";
 
 @Component({
   selector: 'app-create-post-card',
@@ -10,11 +12,22 @@ import {AuthService} from "../../core/services/auth.service";
 export class CreatePostCardComponent extends BaseComponent {
   @Output() open = new EventEmitter<void>();
 
-  constructor(authService: AuthService) {
+  constructor(authService: AuthService, private dialog: MatDialog) {
     super(authService);
   }
 
   onOpen() {
-    this.open.emit();
+      const dialogRef = this.dialog.open(CreatePostModalComponent, {
+        width: '700px',
+        maxHeight: '90vh',
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result?.created) {
+          // this.fetchPosts();
+        }
+      });
   }
+
 }

@@ -26,8 +26,15 @@ public class PostServiceImpl {
     private final PostRepository postRepository;
 
     public PostDto create(PostDto request) {
-
         PostEntity entity = PostMapper.toEntity(request);
+        if (request.getId() != null) {
+            Optional<PostEntity> postEntity = postRepository.findById(request.getId());
+            if (postEntity.isPresent()) {
+                entity.setCreatedAt(postEntity.get().getCreatedAt());
+                entity.setComments(postEntity.get().getComments());
+                entity.setReactions(postEntity.get().getReactions());
+            }
+        }
 
         PostEntity saved = postRepository.save(entity);
 

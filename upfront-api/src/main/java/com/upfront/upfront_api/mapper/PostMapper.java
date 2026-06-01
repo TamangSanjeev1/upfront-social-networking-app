@@ -11,6 +11,7 @@ public class PostMapper {
     public static PostEntity toEntity(PostDto request) {
 
         return PostEntity.builder()
+                .id(request.getId())
                 .type(request.getType())
                 .author(request.getAuthor())
                 .company(request.getCompany())
