@@ -26,7 +26,7 @@ interface LinkConfig {
         @for (link of visibleLinks(); track link.key) {
           <li class="link-item">
             <a
-              [href]="user()!.socialLinks[link.key]"
+              [href]="viewUserInfo ? viewUserInfo!.socialLinks[link.key] : user()!.socialLinks[link.key]"
               target="_blank"
               rel="noopener noreferrer"
               class="link-anchor"
