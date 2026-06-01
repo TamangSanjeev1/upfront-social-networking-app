@@ -9,6 +9,23 @@
   <button class="filter-chip" [class.active]="activeFilter === 'wfh'" (click)="setFilter('wfh')">🏠 WFH Culture</button>
 </div>
 
+<!-- Search Result Header -->
+<div class="page-layout">
+    <div class="feed-section">
+        <div class="search-header" *ngIf="searchKeyword">
+            <div class="search-result-info">
+                <span class="material-icons">search</span>
+                <div>
+                    <h2>Results for "<strong>{{ searchKeyword }}</strong>"</h2>
+                    <span class="result-count">{{ totalItems }} post{{ totalItems !== 1 ? 's' : '' }} found</span>
+                </div>
+            </div>
+            <button class="btn btn-ghost" (click)="clearSearch()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+    </div>
+</div>
 <!-- Post Feed -->
 <div id="postFeed" style="display:flex;flex-direction:column;gap:14px;" [ngStyle]="{'opacity': fadeOut ? '0' : '1', 'transform': fadeOut ? 'translateY(4px)' : 'translateY(0)', 'transition': 'opacity 0.3s, transform 0.3s'}">
 

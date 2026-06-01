@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,5 +105,12 @@ public class PostServiceImpl {
                 result.isLast(),
                 result.isFirst()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<PostDto> searchPosts(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<PostEntity> postPage = postRepository.searchPosts(keyword, pageable);
+        return toPagedResponse(postPage, page, size);
     }
 }

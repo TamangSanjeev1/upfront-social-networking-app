@@ -8,5 +8,6 @@ export const Apiconstants = {
   PAGINATION: '/pagination',
   READ: API + '/notification/read',
   TAG: '/tag/',
+  SEARCH: '/search',
   REACTION: API + '/reaction'
 }

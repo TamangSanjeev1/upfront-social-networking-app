@@ -37,6 +37,15 @@ export class PaginationService extends BaseService {
     return this.http.get<PagedResponse<Post>>(environment.apiUrl + Apiconstants.POST + Apiconstants.TAG + `${tag}`, { params });
   }
 
+  searchPost(search: string, page: number, size: number = 10): Observable<PagedResponse<Post>> {
+    let params = new HttpParams()
+        .set('page', page.toString())
+        .set('size', size.toString())
+        .set('keyword', search);
+
+    return this.http.get<PagedResponse<Post>>(environment.apiUrl + Apiconstants.POST + Apiconstants.SEARCH, {params});
+  }
+
   react(postId: number, type: 'LIKE' | 'DISLIKE'): Observable<ReactionResponse> {
     const request: ReactionRequest = {
       type

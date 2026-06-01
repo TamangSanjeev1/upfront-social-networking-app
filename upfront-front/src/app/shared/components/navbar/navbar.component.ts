@@ -4,24 +4,28 @@ import {WebSocketService} from "../../../core/services/websocket.service";
 import {BaseComponent} from "../../../core/components/base.component";
 import {CommonModule} from "@angular/common";
 import {NotificationModel} from "../../models/user-profile.model";
-import {Subscription} from "rxjs";
+import {debounceTime, distinctUntilChanged, Subject, Subscription, takeUntil} from "rxjs";
 import {PaginationService} from "../../services/services/pagination.service";
 import {Apiconstants} from "../../apiconstants";
 import {MatDialog} from "@angular/material/dialog";
 import {ViewNotificationComponent} from "../../../dashboard/view-notification/view-notification.component";
 import {Utils} from "../../utils/utils";
+import {Router} from "@angular/router";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent extends BaseComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
   @Output() themeChanged = new EventEmitter<boolean>();
-  
+  searchQuery = '';
+  searchFocused = false;
+  private searchSubject = new Subject<string>();
   isDark = false;
   notifOpen = false;
   profileOpen = false;
@@ -29,7 +33,8 @@ export class NavbarComponent extends BaseComponent implements OnInit, OnDestroy 
   wsStatus = computed(() => this.ws.status());
   private sub = new Subscription();
 
-  constructor(authService: AuthService, private ws: WebSocketService, private notificationService: PaginationService, private dialog: MatDialog) {
+  constructor(authService: AuthService, private ws: WebSocketService, private notificationService: PaginationService, private dialog: MatDialog,
+              private router: Router) {
     super(authService);
   }
 
@@ -90,6 +95,18 @@ export class NavbarComponent extends BaseComponent implements OnInit, OnDestroy 
     this.ws.connect();
     this.subscribeNotification();
     this.fetchNotifications();
+    // Listener for search
+    this.searchSubject.pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+    ).subscribe(query => {
+      if (query.trim()) {
+        this.router.navigate(['/'], { queryParams: { search: query.trim() } });
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   subscribeNotification() {
@@ -120,6 +137,21 @@ export class NavbarComponent extends BaseComponent implements OnInit, OnDestroy 
         console.error(err);
       }
     });
+  }
+
+  onSearchChange(value: string) {
+    this.searchSubject.next(value);
+  }
+
+  onSearchBlur() {
+    setTimeout(() => this.searchFocused = false, 200);
+  }
+
+  doSearch() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/'], { queryParams: { search: this.searchQuery.trim() } });
+    }
+    this.searchFocused = false;
   }
 
   protected readonly Utils = Utils;

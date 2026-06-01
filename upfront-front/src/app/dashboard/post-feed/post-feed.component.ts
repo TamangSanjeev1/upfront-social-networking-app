@@ -7,6 +7,7 @@ import {Apiconstants} from "../../shared/apiconstants";
 import {BaseComponent} from "../../core/components/base.component";
 import {AuthService} from "../../core/services/auth.service";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-post-feed',
@@ -17,14 +18,25 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
   posts = signal<Post[]>([]);
   activeFilter = 'hot';
   fadeOut = false;
+  searchKeyword = '';
+  totalItems = 0;
   @ViewChild('scrollAnchor') scrollAnchor!: ElementRef;
   private subscription?: Subscription;
-  constructor(authService: AuthService, private refreshService: RefreshService, private postService: PaginationService, private destroyRef: DestroyRef) {
+  constructor(authService: AuthService, private refreshService: RefreshService, private postService: PaginationService, private destroyRef: DestroyRef,
+              private route: ActivatedRoute, private router: Router) {
     super(authService);
   }
 
   ngOnInit() {
     this.fetchPosts();
+
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const kw = params['search'] || '';
+      if (kw !== this.searchKeyword) {
+        this.searchKeyword = kw;
+        this.resetAndLoad();
+      }
+    });
 
     this.subscription =
         this.refreshService.refresh$
@@ -35,6 +47,22 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
               this.hasMore = true;
               this.fetchPosts(true);
             });
+  }
+
+  resetAndLoad() {
+    this.posts.set([]);
+    this.page = 0;
+    this.size = 10;
+    this.hasMore = true;
+    this.fetchPosts();
+  }
+
+  clearSearch() {
+    this.searchKeyword = '';
+    this.page = 0;
+    this.size = 10;
+    this.hasMore = true;
+    this.fetchPosts();
   }
 
   ngAfterViewInit(): void {
@@ -50,9 +78,9 @@ export class PostFeedComponent extends BaseComponent implements OnInit, OnDestro
     this.isLoading = true;
     this.error = null;
 
-    const request$ = this.activeFilter != "hot"
-        ? this.postService.getPostsByTag(this.activeFilter, this.page, this.size)
-        : this.postService.getByPagination(this.page, this.size, Apiconstants.POST);
+    const request$ = this.searchKeyword != '' ? this.postService.searchPost(this.searchKeyword, this.page, this.size)
+        : (this.activeFilter != "hot" ? this.postService.getPostsByTag(this.activeFilter, this.page, this.size)
+        : this.postService.getByPagination(this.page, this.size, Apiconstants.POST));
 
     request$.pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {

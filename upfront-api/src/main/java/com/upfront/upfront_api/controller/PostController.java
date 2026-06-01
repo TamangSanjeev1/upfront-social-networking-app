@@ -81,4 +81,12 @@ public class PostController {
             @RequestParam(defaultValue = "10") int size, @RequestParam(value = "user", required = false) Long user) {
         return ResponseEntity.ok(user != null ? postService.getPostsByTagAndUser(user, tag, page, size): postService.getPostsByTag(tag, page, size));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<PagedResponse<PostDto>> searchPosts(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(postService.searchPosts(keyword, page, size));
+    }
 }
