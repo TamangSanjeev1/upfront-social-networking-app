@@ -59,7 +59,7 @@ export class WebSocketService implements OnDestroy {
   }
 
   private subscribeToChannels(): void {
-    const userEmail = this.authService.currentUser()?.email;
+    const userId = this.authService.currentUser()?.id;
 
     // Broadcast channel
     this.client?.subscribe('/topic/notifications', (msg: IMessage) => {
@@ -67,8 +67,8 @@ export class WebSocketService implements OnDestroy {
     });
 
     // User-specific channel
-    if (userEmail) {
-      this.client?.subscribe('/user/notifications/' + userEmail, (msg: IMessage) => {
+    if (userId) {
+      this.client?.subscribe('/user/notifications/' + userId, (msg: IMessage) => {
         this.notifications$.next(JSON.parse(msg.body));
       });
     }

@@ -4,8 +4,10 @@ import com.upfront.upfront_api.dto.CommentDto;
 import com.upfront.upfront_api.entity.CommentEntity;
 import com.upfront.upfront_api.entity.PostEntity;
 import com.upfront.upfront_api.mapper.CommentMapper;
+import com.upfront.upfront_api.mapper.NotificationMapper;
 import com.upfront.upfront_api.repository.CommentRepository;
 import com.upfront.upfront_api.repository.PostRepository;
+import com.upfront.upfront_api.utils.NotificationEnum;
 import com.upfront.upfront_api.utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentMapper commentMapper;
     private final UserService userService;
-
+    private final NotificationService notificationService;
     @Transactional(readOnly = true)
     public List<CommentDto> getComments(Long postId) {
         return commentRepository.findAllByPostId(postId)
@@ -37,6 +40,12 @@ public class CommentService {
                 .body(request.getBody())
                 .post(post)
                 .build();
+        if (!Objects.equals(SecurityUtils.getCurrentUserId(), post.getUser().getId())) {
+            String shortBody = request.getBody().length() > 30
+                    ? request.getBody().substring(0, 30) + "..."
+                    : request.getBody();
+            notificationService.sendNotificationToUser(post.getUser().getId(), notificationService.save(NotificationMapper.toEntity(shortBody, NotificationEnum.COMMENT)));
+        }
         CommentEntity commentEntity = commentRepository.save(comment);
         commentEntity.setUser(this.userService.findById(SecurityUtils.getCurrentUserId()));
         return commentMapper.toDto(commentEntity);

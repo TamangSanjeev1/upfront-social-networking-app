@@ -154,5 +154,22 @@ export class NavbarComponent extends BaseComponent implements OnInit, OnDestroy 
     this.searchFocused = false;
   }
 
+  getNotificationIcon(type: string): string {
+    switch (type?.toLowerCase()) {
+      case 'post':
+        return '📝';
+      case 'comment':
+        return '💬';
+      case 'like':
+        return '👍';
+      case 'dislike':
+        return '👎';
+      case 'success':
+        return '✅';
+      default:
+        return '🔔';
+    }
+  }
+
   protected readonly Utils = Utils;
 }

@@ -5,10 +5,10 @@ import com.upfront.upfront_api.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
+
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Random;
-import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class NotificationWebSocketController {
                     .type("SUCCESS")
                     .timestamp(LocalDateTime.now())
                     .build();
-            notificationService.sendNotificationToUser(principal.getName(), pong);
+            notificationService.sendNotificationToUser(Long.parseLong(principal.getName()), pong);
         }
     }
 }
