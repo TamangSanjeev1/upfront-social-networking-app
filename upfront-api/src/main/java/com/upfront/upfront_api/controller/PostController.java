@@ -2,18 +2,16 @@ package com.upfront.upfront_api.controller;
 
 import com.upfront.upfront_api.dto.PostDto;
 import com.upfront.upfront_api.dto.response.PagedResponse;
-import com.upfront.upfront_api.entity.NotificationEntity;
+import com.upfront.upfront_api.mapper.NotificationMapper;
 import com.upfront.upfront_api.service.NotificationService;
 import com.upfront.upfront_api.service.PostServiceImpl;
 import com.upfront.upfront_api.service.UserService;
 import com.upfront.upfront_api.utils.NotificationEnum;
-import com.upfront.upfront_api.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -33,15 +31,7 @@ public class PostController {
         userService.updateUserCounts();
         PostDto postDto = postService.create(request);
         if (request.getId() == null) {
-            NotificationEntity notificationEntity = NotificationEntity.builder()
-                    .unread(true)
-                    .iconBg(NotificationEnum.POST.getIconBg())
-                    .type(NotificationEnum.POST.getType())
-                    .title(NotificationEnum.POST.getTitle() + SecurityUtils.getCurrentName())
-                    .body(request.getTitle())
-                    .timestamp(LocalDateTime.now())
-                    .build();
-            notificationService.sendNotificationGeneral(notificationService.save(notificationEntity));
+            notificationService.sendNotificationGeneral(notificationService.save(NotificationMapper.toEntity(request.getTitle(), NotificationEnum.POST)));
         }
         return postDto;
 

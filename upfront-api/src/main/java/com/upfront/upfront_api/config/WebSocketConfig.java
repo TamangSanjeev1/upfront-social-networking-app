@@ -57,11 +57,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         token = token.substring(7);
                     }
                     if (StringUtils.hasText(token) && jwtUtils.validateToken(token)) {
-                        String email = jwtUtils.getEmailFromToken(token);
+                        Long id = jwtUtils.getId(token);
                         Authentication auth = new UsernamePasswordAuthenticationToken(
-                                email, null, Collections.emptyList());
+                                id, null, Collections.emptyList());
                         accessor.setUser(auth);
-                        log.debug("WebSocket authenticated for: {}", email);
+                        log.debug("WebSocket authenticated for: {}", id);
                     } else {
                         log.warn("WebSocket connection rejected: invalid or missing token");
                         return null; // reject connection

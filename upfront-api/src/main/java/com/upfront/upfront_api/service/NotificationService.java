@@ -41,9 +41,9 @@ public class NotificationService {
     private final List<String> TYPES = List.of("INFO", "SUCCESS", "WARNING");
     private final Random random = new Random();
 
-    public void sendNotificationToUser(String email, NotificationDto notification) {
-        messagingTemplate.convertAndSend("/user/notifications/" + email, notification);
-        log.debug("Sent notification to {}: {}", email, notification.getBody());
+    public void sendNotificationToUser(Long id, NotificationDto notification) {
+        messagingTemplate.convertAndSend("/user/notifications/" + id, notification);
+        log.debug("Sent notification to {}: {}", id, notification.getBody());
     }
 
     public void sendNotificationGeneral(NotificationDto notification) {

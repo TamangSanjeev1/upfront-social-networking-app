@@ -2,7 +2,10 @@ package com.upfront.upfront_api.utils;
 
 public enum NotificationEnum {
 
-    POST("post", "#4460ed", "Post Created by ");
+    POST("post", "#4460ed", "Post Created by "),
+    LIKE("like", "#44ed5b", "Post Liked by "),
+    DISLIKE("dislike", "#ed4a44", "Post Disliked by "),
+    COMMENT("comment", "#edeb44", "Post Commented by ");
 
     private final String type;
     private final String iconBg;

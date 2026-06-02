@@ -1,19 +1,24 @@
 package com.upfront.upfront_api.mapper;
 
 import com.upfront.upfront_api.dto.NotificationDto;
+import com.upfront.upfront_api.dto.PostDto;
 import com.upfront.upfront_api.dto.UserDto;
 import com.upfront.upfront_api.entity.NotificationEntity;
+import com.upfront.upfront_api.utils.NotificationEnum;
+import com.upfront.upfront_api.utils.SecurityUtils;
+
+import java.time.LocalDateTime;
 
 public class NotificationMapper {
 
-    public static NotificationEntity toEntity(NotificationDto request) {
+    public static NotificationEntity toEntity(String title, NotificationEnum notificationEnum) {
         return NotificationEntity.builder()
-                .id(request.getId())
-                .type(request.getType())
-                .title(request.getTitle())
-                .body(request.getBody())
-                .iconBg(request.getIconBg())
-                .unread(request.getUnread())
+                .unread(true)
+                .iconBg(notificationEnum.getIconBg())
+                .type(notificationEnum.getType())
+                .title(notificationEnum.getTitle() + SecurityUtils.getCurrentName())
+                .body(title)
+                .timestamp(LocalDateTime.now())
                 .build();
     }
 

@@ -43,6 +43,13 @@ public final class SecurityUtils {
         return user != null ? user.getId() : null;
     }
 
+    public static String getEmail() {
+
+        UserPrincipal user = getCurrentUser();
+
+        return user != null ? user.getEmail() : null;
+    }
+
     public static String getCurrentName() {
 
         UserPrincipal user = getCurrentUser();
