@@ -3,6 +3,7 @@ package com.upfront.upfront_api.mapper;
 import com.upfront.upfront_api.dto.PostDto;
 import com.upfront.upfront_api.dto.UserDto;
 import com.upfront.upfront_api.entity.PostEntity;
+import com.upfront.upfront_api.utils.DBConstantsEnum;
 import com.upfront.upfront_api.utils.ReactionType;
 import com.upfront.upfront_api.utils.SecurityUtils;
 
@@ -30,15 +31,21 @@ public class PostMapper {
         if (entity == null) return null;
 
         long upvotes   = entity.getReactions().stream()
-                .filter(r -> ReactionType.LIKE.equals(r.getType())).count();
+                .filter(r -> ReactionType.LIKE.equals(r.getType()))
+                .filter(r -> DBConstantsEnum.ACTIVE.getStatus().equals(r.getStatus()))
+                .count();
         long downvotes = entity.getReactions().stream()
-                .filter(r -> ReactionType.DISLIKE.equals(r.getType())).count();
+                .filter(r -> ReactionType.DISLIKE.equals(r.getType()))
+                .filter(r -> DBConstantsEnum.ACTIVE.getStatus().equals(r.getStatus()))
+                .count();
         long commentCount = entity.getComments().size();
         boolean isLikedByUser = entity.getReactions().stream()
                 .filter(r -> ReactionType.LIKE.equals(r.getType()))
+                .filter(r -> DBConstantsEnum.ACTIVE.getStatus().equals(r.getStatus()))
                 .anyMatch(r -> r.getUser().getId().equals(SecurityUtils.getCurrentUserId()));
         boolean isDisLikedByUser = entity.getReactions().stream()
                 .filter(r -> ReactionType.DISLIKE.equals(r.getType()))
+                .filter(r -> DBConstantsEnum.ACTIVE.getStatus().equals(r.getStatus()))
                 .anyMatch(r -> r.getUser().getId().equals(SecurityUtils.getCurrentUserId()));
         return PostDto.builder()
                 .id(entity.getId())

@@ -1,5 +1,6 @@
 package com.upfront.upfront_api.entity;
 
+import com.upfront.upfront_api.utils.DBConstantsEnum;
 import com.upfront.upfront_api.utils.ReactionType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,8 +36,11 @@ public class ReactionEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
+    private String status = DBConstantsEnum.ACTIVE.getStatus();
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
+        this.status = DBConstantsEnum.ACTIVE.getStatus();
     }
 }

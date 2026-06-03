@@ -7,6 +7,7 @@ import com.upfront.upfront_api.entity.User;
 import com.upfront.upfront_api.mapper.NotificationMapper;
 import com.upfront.upfront_api.repository.PostRepository;
 import com.upfront.upfront_api.repository.ReactionRepository;
+import com.upfront.upfront_api.utils.DBConstantsEnum;
 import com.upfront.upfront_api.utils.NotificationEnum;
 import com.upfront.upfront_api.utils.ReactionType;
 import com.upfront.upfront_api.utils.SecurityUtils;
@@ -32,7 +33,7 @@ public class ReactionService {
         PostEntity post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
 
-        Optional<ReactionEntity> existing = reactionRepository.findByPostIdAndUserId(postId, SecurityUtils.getCurrentUserId());
+        Optional<ReactionEntity> existing = reactionRepository.findTopByPostIdAndUserIdOrderByCreatedAtDesc(postId, SecurityUtils.getCurrentUserId());
         boolean sameUser = false;
         if (Objects.equals(SecurityUtils.getCurrentUserId(), post.getUser().getId())) {
             sameUser = true;
@@ -41,14 +42,17 @@ public class ReactionService {
             ReactionEntity reaction = existing.get();
             if (reaction.getCreatedAt().isBefore(LocalDateTime.now().minusHours(1)) && !sameUser) {
                 // createdAt is more than 1 hour ago
-                notificationService.sendNotificationToUser(post.getUser().getId(), notificationService.save(NotificationMapper.toEntity(post.getTitle(), request.getType().name().equals("LIKE") ? NotificationEnum.LIKE : NotificationEnum.DISLIKE)));
+                notificationService.sendNotificationToUser(post.getUser().getId(), notificationService.save(NotificationMapper.toEntity(post.getTitle(), request.getType().name().equals("LIKE") ? NotificationEnum.LIKE : NotificationEnum.DISLIKE, post.getUser())));
             }
-            if (reaction.getType() == request.getType()) {
+            if (reaction.getType() == request.getType() && reaction.getStatus().equals(DBConstantsEnum.ACTIVE.getStatus())) {
                 // Toggle off: same reaction clicked again
-                reactionRepository.delete(reaction);
+                reaction.setStatus(DBConstantsEnum.DELETED.getStatus());
+                reactionRepository.save(reaction);
             } else {
                 // Switch reaction
                 reaction.setType(request.getType());
+                reaction.setCreatedAt(LocalDateTime.now());
+                reaction.setStatus(DBConstantsEnum.ACTIVE.getStatus());
                 reactionRepository.save(reaction);
             }
         } else {
@@ -58,14 +62,14 @@ public class ReactionService {
                     .post(post)
                     .build();
             if (!sameUser) {
-                notificationService.sendNotificationToUser(post.getUser().getId(), notificationService.save(NotificationMapper.toEntity(post.getTitle(), request.getType().name().equals("LIKE") ? NotificationEnum.LIKE : NotificationEnum.DISLIKE)));
+                notificationService.sendNotificationToUser(post.getUser().getId(), notificationService.save(NotificationMapper.toEntity(post.getTitle(), request.getType().name().equals("LIKE") ? NotificationEnum.LIKE : NotificationEnum.DISLIKE, post.getUser())));
             }
             reactionRepository.save(newReaction);
         }
 
         long likes = reactionRepository.countByPostIdAndType(postId, ReactionType.LIKE);
         long dislikes = reactionRepository.countByPostIdAndType(postId, ReactionType.DISLIKE);
-        ReactionType userReaction = reactionRepository.findByPostIdAndUserId(postId, SecurityUtils.getCurrentUserId())
+        ReactionType userReaction = reactionRepository.findByPostIdAndUserIdAndStatus(postId, SecurityUtils.getCurrentUserId(), DBConstantsEnum.ACTIVE.getStatus())
                 .map(ReactionEntity::getType).orElse(null);
 
         return ReactionDto.Response.builder()
