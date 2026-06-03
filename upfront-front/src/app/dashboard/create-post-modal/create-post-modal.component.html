@@ -13,21 +13,49 @@
     </div>
       <form [formGroup]="postForm">
         <input type="text" placeholder="Title" style="width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:15px;font-weight:600;outline:none;margin-bottom:12px;background:transparent;color:inherit;" formControlName="title">
-          <div class="rf-error" *ngIf="submitted && f['title'].errors">
-              Min 10 letters needed.
-          </div>
+          <span class="rf-error" *ngIf="submitted && f['title'].errors?.['required']">
+            Title is required.
+          </span>
+
+          <span class="rf-error" *ngIf="submitted && f['title'].errors?.['minlength']">
+            Title must be at least 5 characters.
+          </span>
+
+          <span class="rf-error" *ngIf="submitted && f['title'].errors?.['maxlength']">
+            Title must not exceed 120 characters.
+          </span>
         <input type="text" placeholder="Company" style="width:100%;padding:10px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;margin-bottom:12px;background:transparent;color:inherit;" formControlName="company">
-          <div class="rf-error" *ngIf="submitted && f['company'].errors">
-              Company is required with min 5 letters.
-          </div>
+          <span class="rf-error" *ngIf="submitted && f['company'].errors?.['required']">
+            Company is required.
+          </span>
+
+          <span class="rf-error" *ngIf="submitted && f['company'].errors?.['minlength']">
+            Company must be at least 5 characters.
+          </span>
+
+          <span class="rf-error" *ngIf="submitted && f['company'].errors?.['maxlength']">
+            Company must not exceed 40 characters.
+          </span>
         <input type="text" placeholder="Role" style="width:100%;padding:10px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;margin-bottom:12px;background:transparent;color:inherit;" formControlName="role">
-          <div class="rf-error" *ngIf="submitted && f['role'].errors">
-              Role is required with min 5 letters.
-          </div>
+          <span class="rf-error" *ngIf="submitted && f['role'].errors?.['required']">
+            Role is required.
+          </span>
+
+          <span class="rf-error" *ngIf="submitted && f['role'].errors?.['minlength']">
+            Role must be at least 5 characters.
+          </span>
+
+          <span class="rf-error" *ngIf="submitted && f['role'].errors?.['maxlength']">
+            Role must not exceed 30 characters.
+          </span>
           <textarea placeholder="Share your thoughts, experience, or review…" rows="5" style="width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);font-family:inherit;font-size:14px;outline:none;resize:none;background:transparent;color:inherit;line-height:1.6;" formControlName="body"></textarea>
-          <div class="rf-error" *ngIf="submitted && f['body'].errors">
-              Min 20 letters needed.
-          </div>
+          <span class="rf-error" *ngIf="submitted && f['body'].errors?.['required']">
+            Role is required.
+          </span>
+
+          <span class="rf-error" *ngIf="submitted && f['body'].errors?.['minlength']">
+            Role must be at least 10 characters.
+          </span>
           <!-- ── TAGS ── -->
           <section class="rf-section">
               <h2 class="rf-section__label">

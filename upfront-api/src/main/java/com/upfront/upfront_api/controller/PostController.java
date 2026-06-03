@@ -31,7 +31,7 @@ public class PostController {
         userService.updateUserCounts();
         PostDto postDto = postService.create(request);
         if (request.getId() == null) {
-            notificationService.sendNotificationGeneral(notificationService.save(NotificationMapper.toEntity(request.getTitle(), NotificationEnum.POST)));
+            notificationService.sendNotificationGeneral(notificationService.save(NotificationMapper.toEntity(request.getTitle(), NotificationEnum.POST, null)));
         }
         return postDto;
 

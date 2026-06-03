@@ -93,8 +93,8 @@ public class PostEntity {
     @Builder.Default
     private List<CommentEntity> comments = new ArrayList<>();
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'A'")
-    private String status;
+    @Column(nullable = false)
+    private String status = DBConstantsEnum.ACTIVE.getStatus();
 
     @PrePersist
     protected void onCreate() {

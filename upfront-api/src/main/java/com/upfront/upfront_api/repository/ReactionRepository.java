@@ -12,8 +12,13 @@ import java.util.Optional;
 @Repository
 public interface ReactionRepository extends JpaRepository<ReactionEntity, Long> {
 
-    Optional<ReactionEntity> findByPostIdAndUserId(Long postId, Long userId);
+    Optional<ReactionEntity> findTopByPostIdAndUserIdOrderByCreatedAtDesc(
+            Long postId,
+            Long userId
+    );
 
-    @Query("SELECT COUNT(r) FROM ReactionEntity r WHERE r.post.id = :postId AND r.type = :type")
+    Optional<ReactionEntity> findByPostIdAndUserIdAndStatus(Long postId, Long userId, String status);
+
+    @Query("SELECT COUNT(r) FROM ReactionEntity r WHERE r.status = 'A' AND r.post.id = :postId AND r.type = :type")
     long countByPostIdAndType(@Param("postId") Long postId, @Param("type") ReactionType type);
 }

@@ -41,10 +41,13 @@ public class CommentService {
                 .post(post)
                 .build();
         if (!Objects.equals(SecurityUtils.getCurrentUserId(), post.getUser().getId())) {
-            String shortBody = request.getBody().length() > 30
-                    ? request.getBody().substring(0, 30) + "..."
+            String shortBody = request.getBody().length() > 20
+                    ? request.getBody().substring(0, 20) + "..."
                     : request.getBody();
-            notificationService.sendNotificationToUser(post.getUser().getId(), notificationService.save(NotificationMapper.toEntity(shortBody, NotificationEnum.COMMENT)));
+            String title = post.getTitle().length() > 20
+                    ? post.getTitle().substring(0, 20)
+                    : post.getTitle();
+            notificationService.sendNotificationToUser(post.getUser().getId(), notificationService.save(NotificationMapper.toEntity(title + " — " + shortBody, NotificationEnum.COMMENT, post.getUser())));
         }
         CommentEntity commentEntity = commentRepository.save(comment);
         commentEntity.setUser(this.userService.findById(SecurityUtils.getCurrentUserId()));
